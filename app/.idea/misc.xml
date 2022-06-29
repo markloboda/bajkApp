@@ -3,7 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/layout/main_fragment.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2985" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/layout-w1240dp/bike_card.xml" value="0.256640625" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/layout/bike_card.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/layout/content_scrolling.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/layout/main_activity.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/layout/main_fragment.xml" value="0.33" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/menu/menu_scrolling.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/menu/toolbar.xml" value="0.3009833262077811" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2985" />
+        <entry key="..\:/Users/Mark/Desktop/Programing/mBajk/app/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2985" />
       </map>
     </option>
   </component>
