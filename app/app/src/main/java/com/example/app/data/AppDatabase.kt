@@ -42,6 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
                         val values = ContentValues()
                         for (i in 1..7) {
                             values.put("title", "Bajk $i")
+                            values.put("drivenKm", 0)
                             values.put("status", true)
                             db.insert("bike_table", SQLiteDatabase.CONFLICT_REPLACE, values)
                         }

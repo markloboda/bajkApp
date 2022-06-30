@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                 userViewModel.userLive.observe(this) { dbUser ->
                     val od = reservationOd.text.toString()
                     val doo = reservationDo.text.toString()
-                    val km = reservationKm.progress.toInt()
+                    val km = (reservationKm.progress * 0.5).toInt() // max 50 km ride
                     val namen = reservationNamen.text.toString()
 
 
@@ -101,6 +101,16 @@ class MainActivity : AppCompatActivity() {
                         // create and insert new reservation
                         insertReservation(dbUser.id, bikeId, od, doo, km, namen)
                     }
+
+                    // update bike km
+                    bikeViewModel.bikeLive.observe(this) { bike ->
+                        bike.drivenKm += km
+                        bikeViewModel.updateBike(bike)
+                        bikeViewModel.bikeLive = MutableLiveData()
+                        bikeViewModel.bikeLive.removeObservers(this)
+                    }
+                    bikeViewModel.readBikeById(bikeId)
+
                     userViewModel.userLive = MutableLiveData()
                     userViewModel.userLive.removeObservers(this)
                 }

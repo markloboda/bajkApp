@@ -3,6 +3,7 @@ package com.example.app.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.app.data.AppDatabase
 import com.example.app.data.bike.BikeRepository
@@ -14,6 +15,7 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
 
     val allBikes: LiveData<List<Bike>>
     val repository: BikeRepository
+    var bikeLive: MutableLiveData<Bike> = MutableLiveData()
 
     init {
         val bikeDao = AppDatabase.getDatabase(application).bikeDao()
@@ -21,9 +23,16 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
         allBikes = repository.readAllBikes
     }
 
-    fun insertAllBikes(vararg bikes: Bike) {
+    fun readBikeById(bikeId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertAllBikes(*bikes)
+            val readBike = repository.readBikeById(bikeId)
+            bikeLive.postValue(readBike!!)
+        }
+    }
+
+    fun updateBike(bike: Bike) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateBike(bike)
         }
     }
 }
