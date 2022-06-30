@@ -1,16 +1,19 @@
-package com.example.app
+package com.example.app.recyclerView
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.app.data.AppDatabase
+import com.example.app.MainActivity
+import com.example.app.R
 import com.example.app.data.Bike
 
-class BikesRecyclerViewAdapter : RecyclerView.Adapter<BikesRecyclerViewAdapter.ViewHolder>() {
+class BikesRecyclerViewAdapter(private val context: Context) :
+    RecyclerView.Adapter<BikesRecyclerViewAdapter.ViewHolder>() {
 
     private var bikes: List<Bike> = listOf()
 
@@ -32,9 +35,19 @@ class BikesRecyclerViewAdapter : RecyclerView.Adapter<BikesRecyclerViewAdapter.V
         holder.bikeTitle.text = currentBike.title
         holder.bikeStatus.text = if (currentBike.status) "Na voljo" else "Izposojen"
         holder.bikeStatus.setTextColor(
-            if (currentBike.status) ContextCompat.getColor(holder.bikeStatus.context, R.color.status_green)
-            else ContextCompat.getColor(holder.bikeStatus.context, R.color.status_red)
+            if (currentBike.status) ContextCompat.getColor(
+                holder.bikeStatus.context,
+                R.color.status_red
+            )
+            else ContextCompat.getColor(holder.bikeStatus.context, R.color.status_green)
         )
+        holder.itemView.setOnClickListener {
+            (context as MainActivity).dataDialog(
+                currentBike.id,
+                currentBike.title,
+                currentBike.status
+            )
+        }
     }
 
     override fun getItemCount() = bikes.size

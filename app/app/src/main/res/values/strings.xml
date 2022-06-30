@@ -3,4 +3,12 @@
     <string name="defaultBikeId">#00</string>
     <string name="defaultBikeTitle">neznan naziv kolesa</string>
     <string name="defaultBikeStatus">neznano</string>
+    <string name="izposojevalec">Izposojevalec</string>
+    <string name="sektor">Sektor</string>
+    <string name="namen">Namen</string>
+    <string name="rezerviraj">Rezerviraj</string>
+    <string name="km">km</string>
+    <string name="od">od</string>
+    <string name="doStr">do</string>
+    <string name="nazaj">Nazaj</string>
 </resources>
