@@ -8,11 +8,13 @@
     <string name="namen">Namen</string>
     <string name="rezerviraj">Rezerviraj</string>
     <string name="km">km</string>
-    <string name="od">od</string>
-    <string name="doStr">do</string>
+    <string name="od">OD</string>
+    <string name="doStr">DO</string>
     <string name="nazaj">Nazaj</string>
     <string name="sektor_razvoj">razvoj</string>
     <string name="sektor_prodaja">prodaja</string>
     <string name="sektor_proizvodnja">proizvodnja</string>
     <string name="ni_rezervacije">Ni rezervacije</string>
+    <string name="datum">datum</string>
+    <string name="ura">ura</string>
 </resources>

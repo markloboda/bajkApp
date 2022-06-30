@@ -6,6 +6,7 @@ class ReservationRepository(private val reservationDao: ReservationDao) {
 
     suspend fun getAllBikeReservations(bikeId: Long) : List<Reservation?> = reservationDao.getAllReservations(bikeId)
 
+
     suspend fun insertReservation(reservation: Reservation) = reservationDao.insertReservation(reservation)
 
 }

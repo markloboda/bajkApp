@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
 
     @SuppressLint("SimpleDateFormat")
-    private val dateFormat = SimpleDateFormat("d/M/yyyy")
+    private val dateFormat = SimpleDateFormat("d/M/yyyy-H:mm")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,10 @@ class MainActivity : AppCompatActivity() {
         // setup swipe refresh
         val swipeRefresh = findViewById<View>(R.id.swipeRefresh) as SwipeRefreshLayout
         swipeRefresh.setOnRefreshListener {
-            // refresh bike data base: check any of the bikes are reserved
+            // check bike availability
+            // get reservations for today
+
+
             swipeRefresh.isRefreshing = false
         }
     }
@@ -128,8 +131,10 @@ class MainActivity : AppCompatActivity() {
         // get view that contain inputed data
         val reservationIzposojevalec = dialog.findViewById<EditText>(R.id.reservationIzposojevalec)
         val reservationSektor = dialog.findViewById<Spinner>(R.id.reservationSektor)
-        val reservationOd = dialog.findViewById<EditText>(R.id.reservationOd)
-        val reservationDo = dialog.findViewById<EditText>(R.id.reservationDo)
+        val reservationOdDate = dialog.findViewById<EditText>(R.id.reservationOdDate)
+        val reservationOdTime = dialog.findViewById<EditText>(R.id.reservationOdTime)
+        val reservationDoDate = dialog.findViewById<EditText>(R.id.reservationDoDate)
+        val reservationDoTime = dialog.findViewById<EditText>(R.id.reservationDoTime)
         val reservationKm = dialog.findViewById<SeekBar>(R.id.reservationKm)
         val reservationNamen = dialog.findViewById<Spinner>(R.id.reservationNamen)
 
@@ -138,8 +143,10 @@ class MainActivity : AppCompatActivity() {
             if (checkInputs(
                     reservationIzposojevalec!!,
                     reservationSektor!!,
-                    reservationOd!!,
-                    reservationDo!!,
+                    reservationOdDate!!,
+                    reservationOdTime!!,
+                    reservationDoDate!!,
+                    reservationDoTime!!,
                     reservationKm!!,
                     reservationNamen!!
                 )
@@ -148,8 +155,8 @@ class MainActivity : AppCompatActivity() {
 
                 userViewModel.userLive.observe(this) { dbUser ->
                     // convert date to long
-                    val od = dateFormat.parse(reservationOd.text.toString())
-                    val doo = dateFormat.parse(reservationDo.text.toString())
+                    val od = dateFormat.parse("${reservationOdDate.text}-${reservationOdTime.text}")
+                    val doo = dateFormat.parse("${reservationDoDate.text}-${reservationDoTime.text}")
 
                     val km = (reservationKm.progress * 0.5).toInt() // max 50 km ride
                     val namen = reservationNamen.selectedItem.toString()
