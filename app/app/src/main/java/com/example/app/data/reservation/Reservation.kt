@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 data class Reservation(
     val userId: Long,
     val bikeId: Long,
-    val zacetekRezervacije: String,
-    val konecRezervacije: String,
+    val zacetekRezervacije: Long,
+    val konecRezervacije: Long,
     val prevozeniKm: Int,
     val namen: String
 ) {

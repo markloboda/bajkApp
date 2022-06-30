@@ -1,12 +1,14 @@
 package com.example.app
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +19,7 @@ import com.example.app.recyclerView.BikesRecyclerViewAdapter
 import com.example.app.viewModel.BikeViewModel
 import com.example.app.viewModel.ReservationViewModel
 import com.example.app.viewModel.UserViewModel
+import java.sql.Date
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,7 +56,42 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun dataDialog(bikeId: Long, bikeTitle: String, bikeStatus: Boolean) {
+    fun bikeDataDialog(bikeId: Long) {
+        // get bike data and set it to the dialog
+        bikeViewModel.bikeLive.observe(this) { bike ->
+            bike!!
+            dialogBuilder = AlertDialog.Builder(this)
+            dialogBuilder.setTitle("Informacije o ${bike.title}")
+            val inflater = this.layoutInflater
+            val dialogView = inflater.inflate(R.layout.bike_dialog, null)
+            dialogBuilder.setView(dialogView)
+            dialog = dialogBuilder.create()
+            dialog.show()
+
+            // get bike reservations
+            reservationViewModel.reservationLive.observe(this) { reservations ->
+                reservations!!
+
+                // find previous reservation for this bike
+                // get current date
+                val currentDate = System.currentTimeMillis()
+                val now = System.currentTimeMillis()
+                for (reservation in reservations) {
+
+                }
+
+                reservationViewModel.reservationLive = MutableLiveData()
+            }
+            reservationViewModel.getAllBikeReservations(bikeId)
+
+            dialog.findViewById<TextView>(R.id.bikeNumKm)?.text = "${bike.drivenKm} km"
+
+            bikeViewModel.bikeLive = MutableLiveData()
+        }
+        bikeViewModel.readBikeById(bikeId)
+    }
+
+    fun reservationDataDialog(bikeId: Long, bikeTitle: String, bikeStatus: Boolean) {
         if (!bikeStatus) return
         dialogBuilder = AlertDialog.Builder(this, R.style.Theme_App)
         dialogBuilder.setTitle("Izposoja kolesa $bikeTitle")
@@ -86,8 +124,12 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
 
                 userViewModel.userLive.observe(this) { dbUser ->
-                    val od = reservationOd.text.toString()
-                    val doo = reservationDo.text.toString()
+                    // convert date to long
+                    val odStr = reservationOd.text.toString().split(":", ".", "/")
+                    val od = Date(odStr[2].toInt(), odStr[1].toInt(), odStr[0].toInt()).time
+                    val doStr = reservationDo.text.toString().split(":", ".", "/")
+                    val doo = Date(doStr[2].toInt(), doStr[1].toInt(), doStr[0].toInt()).time
+
                     val km = (reservationKm.progress * 0.5).toInt() // max 50 km ride
                     val namen = reservationNamen.selectedItem.toString()
 
@@ -96,8 +138,10 @@ class MainActivity : AppCompatActivity() {
                     // else if user doesnt exist, create user and wait for insertion, then get id and insert reservation
                     if (dbUser == null) {
                         // create and insert new user
-                        val firstName = reservationIzposojevalec.text.toString().split(" ")[0].lowercase()
-                        val lastName = reservationIzposojevalec.text.toString().split(" ")[1].lowercase()
+                        val firstName =
+                            reservationIzposojevalec.text.toString().split(" ")[0].lowercase()
+                        val lastName =
+                            reservationIzposojevalec.text.toString().split(" ")[1].lowercase()
                         val sektor = reservationSektor.selectedItem.toString().lowercase()
                         userViewModel.insertUser(firstName, lastName, sektor)
                         userViewModel.userIdLive.observe(this) { userId ->
@@ -143,8 +187,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun insertReservation(userId: Long, bikeId: Long, reservationOd: String, reservationDo: String, prevozeniKm: Int, namen: String) {
-        val reservation = Reservation(userId, bikeId, reservationOd, reservationDo, prevozeniKm, namen)
+    private fun insertReservation(
+        userId: Long,
+        bikeId: Long,
+        reservationOd: Long,
+        reservationDo: Long,
+        prevozeniKm: Int,
+        namen: String
+    ) {
+        val reservation =
+            Reservation(userId, bikeId, reservationOd, reservationDo, prevozeniKm, namen)
         reservationViewModel.insertReservation(reservation)
     }
 
@@ -173,7 +225,11 @@ class MainActivity : AppCompatActivity() {
                 return position != 0
             }
 
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+            override fun getDropDownView(
+                position: Int,
+                convertView: View?,
+                parent: ViewGroup
+            ): View {
                 val view = super.getDropDownView(position, convertView, parent)
                 val textView = view as TextView
                 if (position == 0) {
@@ -187,7 +243,7 @@ class MainActivity : AppCompatActivity() {
         }
         spinner.adapter = spinnerAdapter
         // listener to chanage color depending on selected item (if hint it is gray, if not black)
-        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
@@ -198,10 +254,15 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
                 val value = parent!!.getItemAtPosition(position).toString()
-                if(value == items[0]){
+                if (value == items[0]) {
                     (view as TextView).setTextColor(Color.GRAY)
                 }
             }
         }
     }
+
+    private fun convertMillisToDate(dateInMilliseconds: String, dateFormat: String?): String? {
+        return DateFormat.format(dateFormat, dateInMilliseconds.toLong()).toString()
+    }
+
 }

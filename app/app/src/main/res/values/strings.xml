@@ -14,4 +14,5 @@
     <string name="sektor_razvoj">razvoj</string>
     <string name="sektor_prodaja">prodaja</string>
     <string name="sektor_proizvodnja">proizvodnja</string>
+    <string name="ni_rezervacije">Ni rezervacije</string>
 </resources>

@@ -41,11 +41,16 @@ class BikesRecyclerViewAdapter(private val context: Context) :
             else ContextCompat.getColor(holder.bikeStatus.context, R.color.status_green)
         )
         holder.itemView.setOnClickListener {
-            (context as MainActivity).dataDialog(
+            (context as MainActivity).reservationDataDialog(
                 currentBike.id,
                 currentBike.title,
                 currentBike.status
             )
+        }
+
+        holder.itemView.setOnLongClickListener {
+            (context as MainActivity).bikeDataDialog(currentBike.id)
+            true
         }
     }
 
