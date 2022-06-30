@@ -1,9 +1,8 @@
 package com.example.app
 
+import android.annotation.SuppressLint
 import android.graphics.Color
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -19,7 +18,8 @@ import com.example.app.recyclerView.BikesRecyclerViewAdapter
 import com.example.app.viewModel.BikeViewModel
 import com.example.app.viewModel.ReservationViewModel
 import com.example.app.viewModel.UserViewModel
-import java.sql.Date
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +29,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bikeViewModel: BikeViewModel
     private lateinit var userViewModel: UserViewModel
     private lateinit var reservationViewModel: ReservationViewModel
+
+
+    @SuppressLint("SimpleDateFormat")
+    private val dateFormat = SimpleDateFormat("d/M/yyyy")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     fun bikeDataDialog(bikeId: Long) {
         // get bike data and set it to the dialog
         bikeViewModel.bikeLive.observe(this) { bike ->
@@ -73,11 +78,29 @@ class MainActivity : AppCompatActivity() {
                 reservations!!
 
                 // find previous reservation for this bike
-                // get current date
-                val currentDate = System.currentTimeMillis()
-                val now = System.currentTimeMillis()
+                val currentDate = Calendar.getInstance().timeInMillis
+                var previousReservation: Reservation? = null
+                var nextReservation: Reservation? = null
                 for (reservation in reservations) {
-
+                    if (currentDate < reservation!!.zacetekRezervacije) {
+                        nextReservation = reservation
+                        break
+                    }
+                    previousReservation = reservation
+                }
+                if (previousReservation != null) {
+                    dialog.findViewById<TextView>(R.id.bikeLastReservation)?.text =
+                        "${getDate(previousReservation.zacetekRezervacije)}"
+                } else {
+                    dialog.findViewById<TextView>(R.id.bikeLastReservation)?.text =
+                        "Nima rezervacij"
+                }
+                if (nextReservation != null) {
+                    dialog.findViewById<TextView>(R.id.bikeNextReservation)?.text =
+                        "${getDate(nextReservation.zacetekRezervacije)}"
+                } else {
+                    dialog.findViewById<TextView>(R.id.bikeNextReservation)?.text =
+                        "Nima rezervacij"
                 }
 
                 reservationViewModel.reservationLive = MutableLiveData()
@@ -125,10 +148,8 @@ class MainActivity : AppCompatActivity() {
 
                 userViewModel.userLive.observe(this) { dbUser ->
                     // convert date to long
-                    val odStr = reservationOd.text.toString().split(":", ".", "/")
-                    val od = Date(odStr[2].toInt(), odStr[1].toInt(), odStr[0].toInt()).time
-                    val doStr = reservationDo.text.toString().split(":", ".", "/")
-                    val doo = Date(doStr[2].toInt(), doStr[1].toInt(), doStr[0].toInt()).time
+                    val od = dateFormat.parse(reservationOd.text.toString())
+                    val doo = dateFormat.parse(reservationDo.text.toString())
 
                     val km = (reservationKm.progress * 0.5).toInt() // max 50 km ride
                     val namen = reservationNamen.selectedItem.toString()
@@ -146,13 +167,13 @@ class MainActivity : AppCompatActivity() {
                         userViewModel.insertUser(firstName, lastName, sektor)
                         userViewModel.userIdLive.observe(this) { userId ->
                             // create and insert new reservation
-                            insertReservation(userId, bikeId, od, doo, km, namen)
+                            insertReservation(userId, bikeId, od!!.time, doo!!.time, km, namen)
                             userViewModel.userIdLive = MutableLiveData()
                             userViewModel.userIdLive.removeObservers(this)
                         }
                     } else {
                         // create and insert new reservation
-                        insertReservation(dbUser.id, bikeId, od, doo, km, namen)
+                        insertReservation(dbUser.id, bikeId, od!!.time, doo!!.time, km, namen)
                     }
 
                     // update bike km
@@ -261,8 +282,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun convertMillisToDate(dateInMilliseconds: String, dateFormat: String?): String? {
-        return DateFormat.format(dateFormat, dateInMilliseconds.toLong()).toString()
+    private fun getDate(milliSeconds: Long): String? {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds
+        return dateFormat.format(calendar.time)
     }
-
 }
