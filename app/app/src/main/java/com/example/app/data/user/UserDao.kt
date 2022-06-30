@@ -12,5 +12,5 @@ interface UserDao {
     suspend fun getUser(ime: String, priimek: String, sektor: String): User?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUser(user: User)
+    suspend fun insertUser(user: User): Long
 }

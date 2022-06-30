@@ -15,6 +15,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     private val repository: UserRepository
 
     var userLive: MutableLiveData<User?> = MutableLiveData()
+    var userIdLive: MutableLiveData<Long> = MutableLiveData()
 
     init {
         val userDao = AppDatabase.getDatabase(application).userDao()
@@ -31,7 +32,8 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     fun insertUser(ime: String, priimek: String, sektor: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val user = User(ime, priimek, sektor)
-            repository.insertUser(user)
+            val userId = repository.insertUser(user)
+            userIdLive.postValue(userId)
         }
     }
 }

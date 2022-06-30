@@ -77,20 +77,32 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
 
                 userViewModel.userLive.observe(this) { dbUser ->
+                    val od = reservationOd.text.toString()
+                    val doo = reservationDo.text.toString()
+                    val km = reservationKm.progress.toInt()
+                    val namen = reservationNamen.text.toString()
+
+
+                    // if user already exists, insert reservation
+                    // else if user doesnt exist, create user and wait for insertion, then get id and insert reservation
                     if (dbUser == null) {
                         // create and insert new user
                         val firstName = reservationIzposojevalec.text.toString().split(" ")[0].lowercase()
                         val lastName = reservationIzposojevalec.text.toString().split(" ")[1].lowercase()
                         val sektor = reservationSektor.text.toString().lowercase()
                         userViewModel.insertUser(firstName, lastName, sektor)
+                        userViewModel.userIdLive.observe(this) { userId ->
+                            // create and insert new reservation
+                            insertReservation(userId, bikeId, od, doo, km, namen)
+                            userViewModel.userIdLive = MutableLiveData()
+                            userViewModel.userIdLive.removeObservers(this)
+                        }
+                    } else {
+                        // create and insert new reservation
+                        insertReservation(dbUser.id, bikeId, od, doo, km, namen)
                     }
-                    // create and insert new reservation
-                    val od = reservationOd.text.toString()
-                    val doo = reservationDo.text.toString()
-                    val km = reservationKm.progress.toString()
-                    val namen = reservationNamen.text.toString()
-
                     userViewModel.userLive = MutableLiveData()
+                    userViewModel.userLive.removeObservers(this)
                 }
 
                 val firstName = reservationIzposojevalec.text.toString().split(" ")[0]
