@@ -7,10 +7,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.app.data.bike.Bike
+import com.example.app.data.bike.BikeDao
+import com.example.app.data.reservation.Reservation
+import com.example.app.data.reservation.ReservationDao
+import com.example.app.data.user.User
+import com.example.app.data.user.UserDao
 
-@Database(entities = [Bike::class], version = 1, exportSchema = false)
+@Database(entities = [Bike::class, User::class, Reservation::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bikeDao(): BikeDao
+    abstract fun userDao(): UserDao
+    abstract fun reservationDao(): ReservationDao
 
     companion object {
         @Volatile

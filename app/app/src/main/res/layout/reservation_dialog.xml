@@ -24,7 +24,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reservationIzposojevalec"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -32,6 +31,7 @@
                 app:boxBackgroundColor="#130B0B">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reservationIzposojevalec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#324A7C7C"
@@ -42,7 +42,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reservationSektor"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -50,6 +49,7 @@
                 app:boxBackgroundColor="#130B0B">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reservationSektor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#324A7C7C"
@@ -110,7 +110,6 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reservationNamen"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -118,6 +117,7 @@
                 app:boxBackgroundColor="#130B0B">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reservationNamen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#324A7C7C"
@@ -133,7 +133,8 @@
             android:layout_height="70dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="10dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <Button
                 android:id="@+id/reservationBackButton"

@@ -1,10 +1,7 @@
-package com.example.app.data
+package com.example.app.data.bike
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface BikeDao {
@@ -17,6 +14,11 @@ interface BikeDao {
     @Query("SELECT * FROM bike_table WHERE id=:id")
     fun readBikeById(id: Int): LiveData<Bike>
 
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllBikes(vararg bikes: Bike)
+
+
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    fun updateBike(bike: Bike)
 }

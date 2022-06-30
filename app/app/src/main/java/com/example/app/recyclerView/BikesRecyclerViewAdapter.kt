@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.app.MainActivity
 import com.example.app.R
-import com.example.app.data.Bike
+import com.example.app.data.bike.Bike
 
 class BikesRecyclerViewAdapter(private val context: Context) :
     RecyclerView.Adapter<BikesRecyclerViewAdapter.ViewHolder>() {
