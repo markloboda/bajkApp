@@ -10,5 +10,5 @@ data class Bike(
     @ColumnInfo(name = "status") val status: Boolean
 ) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 }

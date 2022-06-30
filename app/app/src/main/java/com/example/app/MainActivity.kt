@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         reservationViewModel = ViewModelProvider(this)[ReservationViewModel::class.java]
     }
 
-    fun dataDialog(bikeId: Int, bikeTitle: String, bikeStatus: Boolean) {
+    fun dataDialog(bikeId: Long, bikeTitle: String, bikeStatus: Boolean) {
         if (!bikeStatus) return
         dialogBuilder = AlertDialog.Builder(this, R.style.Theme_App)
         dialogBuilder.setTitle("Izposoja kolesa $bikeTitle")
@@ -74,21 +75,30 @@ class MainActivity : AppCompatActivity() {
                 )
             ) {
                 dialog.dismiss()
-                updateBikeStatus(bikeId, false)
 
-                userViewModel.userId.observe(this) { userId ->
-                    insertReservation(
-                        userId,
-                        bikeId,
-                        reservationKm.progress,
-                        reservationNamen.text.toString()
-                    )
+                userViewModel.userLive.observe(this) { dbUser ->
+                    if (dbUser == null) {
+                        // create and insert new user
+                        val firstName = reservationIzposojevalec.text.toString().split(" ")[0].lowercase()
+                        val lastName = reservationIzposojevalec.text.toString().split(" ")[1].lowercase()
+                        val sektor = reservationSektor.text.toString().lowercase()
+                        userViewModel.insertUser(firstName, lastName, sektor)
+                    }
+                    // create and insert new reservation
+                    val od = reservationOd.text.toString()
+                    val doo = reservationDo.text.toString()
+                    val km = reservationKm.progress.toString()
+                    val namen = reservationNamen.text.toString()
+
+                    userViewModel.userLive = MutableLiveData()
                 }
-                insertUserGetId(
-                    reservationIzposojevalec.text.toString(),
-                    reservationSektor.text.toString(),
-                    reservationKm.progress,
-                )
+
+                val firstName = reservationIzposojevalec.text.toString().split(" ")[0]
+                val lastName = reservationIzposojevalec.text.toString().split(" ")[1]
+                val sektor = reservationSektor.text.toString()
+
+                userViewModel.getUser(firstName, lastName, sektor)
+
             } else {
                 // TODO: show error message
             }
@@ -99,32 +109,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun insertUser(izposojevalec: String, sektor: String, km: Int) {
-        val firstName = izposojevalec.split(" ")[0]
-        val lastName = izposojevalec.split(" ")[1]
-        val user = User(firstName, lastName, sektor)
-        userViewModel.insertUser(user)
-    }
-
-    /**
-     * insert into database and returns userId
-     * @return userId
-     */
-    private fun insertUserGetId(izposojevalec: String, sektor: String, km: Int) {
-        val firstName = izposojevalec.split(" ")[0]
-        val lastName = izposojevalec.split(" ")[1]
-
-        val user = User(firstName, lastName, sektor)
-        userViewModel.insertUserGetId(user)
-    }
-
-    private fun insertReservation(userId: Int, bikeId: Int, prevozeniKm: Int, namen: String) {
-        val reservation = Reservation(userId, bikeId, prevozeniKm, namen)
+    private fun insertReservation(userId: Long, bikeId: Long, reservationOd: String, reservationDo: String, prevozeniKm: Int, namen: String) {
+        val reservation = Reservation(userId, bikeId, reservationOd, reservationDo, prevozeniKm, namen)
         reservationViewModel.insertReservation(reservation)
-    }
-
-    private fun updateBikeStatus(bikeId: Int, bikeStatus: Boolean) {
-//        bikeViewModel.updateBikeStatus(bikeId, bikeStatus)
     }
 
     private fun checkInputs(vararg views: View): Boolean {

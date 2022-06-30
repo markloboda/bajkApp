@@ -5,11 +5,13 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "reservation_table")
 data class Reservation(
-    val userId: Int,
-    val bikeId: Int,
+    val userId: Long,
+    val bikeId: Long,
+    val zacetekRezervacije: String,
+    val konecRezervacije: String,
     val prevozeniKm: Int,
     val namen: String
 ) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 }
