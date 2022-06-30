@@ -11,4 +11,7 @@
     <string name="od">od</string>
     <string name="doStr">do</string>
     <string name="nazaj">Nazaj</string>
+    <string name="sektor_razvoj">razvoj</string>
+    <string name="sektor_prodaja">prodaja</string>
+    <string name="sektor_proizvodnja">proizvodnja</string>
 </resources>

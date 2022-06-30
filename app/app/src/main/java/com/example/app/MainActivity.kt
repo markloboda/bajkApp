@@ -1,17 +1,23 @@
 package com.example.app
 
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.graphics.Color
+import android.icu.util.Calendar
+import android.icu.util.GregorianCalendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.SeekBar
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.app.data.reservation.Reservation
-import com.example.app.data.user.User
 import com.example.app.recyclerView.BikesRecyclerViewAdapter
 import com.example.app.viewModel.BikeViewModel
 import com.example.app.viewModel.ReservationViewModel
@@ -43,6 +49,13 @@ class MainActivity : AppCompatActivity() {
         }
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         reservationViewModel = ViewModelProvider(this)[ReservationViewModel::class.java]
+
+        // setup swipe refresh
+        val swipeRefresh = findViewById<View>(R.id.swipeRefresh) as SwipeRefreshLayout
+        swipeRefresh.setOnRefreshListener {
+            // refresh bike data base: check any of the bikes are reserved
+            swipeRefresh.isRefreshing = false
+        }
     }
 
     fun dataDialog(bikeId: Long, bikeTitle: String, bikeStatus: Boolean) {
@@ -51,17 +64,18 @@ class MainActivity : AppCompatActivity() {
         dialogBuilder.setTitle("Izposoja kolesa $bikeTitle")
         dialogBuilder.setIcon(R.drawable.logo)
         val dataPopupView: View = layoutInflater.inflate(R.layout.reservation_dialog, null)
+
         dialogBuilder.setView(dataPopupView)
         dialog = dialogBuilder.create()
         dialog.show()
 
         // get view that contain inputed data
         val reservationIzposojevalec = dialog.findViewById<EditText>(R.id.reservationIzposojevalec)
-        val reservationSektor = dialog.findViewById<EditText>(R.id.reservationSektor)
+        val reservationSektor = dialog.findViewById<Spinner>(R.id.reservationSektor)
         val reservationOd = dialog.findViewById<EditText>(R.id.reservationOd)
         val reservationDo = dialog.findViewById<EditText>(R.id.reservationDo)
         val reservationKm = dialog.findViewById<SeekBar>(R.id.reservationKm)
-        val reservationNamen = dialog.findViewById<EditText>(R.id.reservationNamen)
+        val reservationNamen = dialog.findViewById<Spinner>(R.id.reservationNamen)
 
         // setup dialog buttons
         dataPopupView.findViewById<View>(R.id.reservationConfirmButton).setOnClickListener {
@@ -80,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                     val od = reservationOd.text.toString()
                     val doo = reservationDo.text.toString()
                     val km = (reservationKm.progress * 0.5).toInt() // max 50 km ride
-                    val namen = reservationNamen.text.toString()
+                    val namen = reservationNamen.selectedItem.toString()
 
 
                     // if user already exists, insert reservation
@@ -89,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                         // create and insert new user
                         val firstName = reservationIzposojevalec.text.toString().split(" ")[0].lowercase()
                         val lastName = reservationIzposojevalec.text.toString().split(" ")[1].lowercase()
-                        val sektor = reservationSektor.text.toString().lowercase()
+                        val sektor = reservationSektor.selectedItem.toString().lowercase()
                         userViewModel.insertUser(firstName, lastName, sektor)
                         userViewModel.userIdLive.observe(this) { userId ->
                             // create and insert new reservation
@@ -117,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
                 val firstName = reservationIzposojevalec.text.toString().split(" ")[0]
                 val lastName = reservationIzposojevalec.text.toString().split(" ")[1]
-                val sektor = reservationSektor.text.toString()
+                val sektor = reservationSektor.selectedItem.toString()
 
                 userViewModel.getUser(firstName, lastName, sektor)
 
@@ -125,6 +139,9 @@ class MainActivity : AppCompatActivity() {
                 // TODO: show error message
             }
         }
+        // setup spinners
+        setupSpinnerAdapter(reservationSektor!!, resources.getStringArray(R.array.sektor))
+        setupSpinnerAdapter(reservationNamen!!, resources.getStringArray(R.array.namen))
 
         dataPopupView.findViewById<View>(R.id.reservationBackButton).setOnClickListener {
             dialog.dismiss()
@@ -152,5 +169,44 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return isValid
+    }
+
+    private fun setupSpinnerAdapter(spinner: Spinner, items: Array<String>) {
+        var spinnerAdapter = object : ArrayAdapter<String>(this, R.layout.spinner_row, items) {
+            override fun isEnabled(position: Int): Boolean {
+                //first item is hint, disable
+                return position != 0
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getDropDownView(position, convertView, parent)
+                val textView = view as TextView
+                if (position == 0) {
+                    // set color of hint to gray
+                    textView.setTextColor(Color.GRAY)
+                } else {
+                    textView.setTextColor(Color.BLACK)
+                }
+                return view
+            }
+        }
+        spinner.adapter = spinnerAdapter
+        // listener to chanage color depending on selected item (if hint it is gray, if not black)
+        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val value = parent!!.getItemAtPosition(position).toString()
+                if(value == items[0]){
+                    (view as TextView).setTextColor(Color.GRAY)
+                }
+            }
+        }
     }
 }

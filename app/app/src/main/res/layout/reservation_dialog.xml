@@ -34,58 +34,62 @@
                     android:id="@+id/reservationIzposojevalec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#324A7C7C"
+                    android:background="@drawable/input_bg"
                     android:hint="@string/izposojevalec"
-                    android:textSize="40sp"
+                    android:padding="15dp"
+                    android:textSize="20sp"
                     tools:ignore="TextContrastCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                app:boxBackgroundColor="#130B0B">
+                android:layout_weight="1">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <Spinner
                     android:id="@+id/reservationSektor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#324A7C7C"
-                    android:hint="@string/sektor"
-                    android:textSize="40sp"
-                    tools:ignore="TextContrastCheck" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_gravity="center_vertical"
+                    android:minHeight="48dp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="35dp"
-                android:paddingBottom="35dp">
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/reservationOd"
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:hint="@string/od"
-                    android:importantForAutofill="no"
-                    android:inputType="time"
-                    android:textAlignment="center" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/input_bg"
+                    android:ems="10"
+                    android:hint="od"
+                    android:inputType="date"
+                    android:padding="15dp"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/reservationDo"
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:hint="@string/doStr"
-                    android:importantForAutofill="no"
-                    android:inputType="time"
-                    android:textAlignment="center" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/input_bg"
+                    android:ems="10"
+                    android:hint="do"
+                    android:inputType="date"
+                    android:padding="15dp"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -104,27 +108,26 @@
                     android:id="@+id/reservationKmTextView"
                     android:layout_width="70dp"
                     android:layout_height="40dp"
+                    android:background="@drawable/input_bg"
                     android:gravity="center"
                     android:text="@string/km"
                     android:textAlignment="center" />
             </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                app:boxBackgroundColor="#130B0B">
+                android:layout_weight="1">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <Spinner
                     android:id="@+id/reservationNamen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#324A7C7C"
-                    android:hint="@string/namen"
-                    android:textSize="40sp"
-                    tools:ignore="TextContrastCheck" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_gravity="center_vertical"
+                    android:minHeight="48dp"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </FrameLayout>
+
         </LinearLayout>
 
         <LinearLayout

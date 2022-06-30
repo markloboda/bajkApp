@@ -42,6 +42,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
 
+
     // LifeCycle
     def lifecycleVersion = '2.4.1'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
@@ -57,4 +58,7 @@ dependencies {
     def coroutinesVersion = '1.6.0'
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    // Swiperefreshlayout
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }

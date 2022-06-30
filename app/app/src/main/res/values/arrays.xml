@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sektor">
+        <item>Sektor</item>
+        <item><string name="sektor_razvoj">razvoj</string></item>
+        <item><string name="sektor_prodaja">prodaja</string></item>
+        <item><string name="sektor_proizvodnja">proizvodnja</string></item>
+    </string-array>
+
+    <string-array name="namen">
+        <item>Namen</item>
+        <item><string name="sektor_sluzbeni">sluzbeni</string></item>
+        <item><string name="namen_privatni">privatni</string></item>
+    </string-array>
+
+</resources>

@@ -1,6 +1,6 @@
 [x] delovanje na operacijskem sistemu Android Lollipop
 [x] shranjevanje podatkov v SQLite podatkovni bazi
-[] shranjevanja podatkov izposojevalca (Ime in priimek), sektor podjetja (razvoj, prodaja, proizvodnja), termin izposoje (čas in datum izposoje / vrnitve), približna prevožena razdalja v km, namen izposoje (službeni, privatni)
+[x] shranjevanja podatkov izposojevalca (Ime in priimek), sektor podjetja (razvoj, prodaja, proizvodnja), termin izposoje (čas in datum izposoje / vrnitve), približna prevožena razdalja v km, namen izposoje (službeni, privatni) **TODO: add datum izposoje**
 [x] na prvem zaslonu aplikacije naj bo izpisan seznam vseh koles z šiframi in nazivom (npr. #1, Modro kolo) in z jasno vidnim statusom izposoje (na voljo/izposojeno)
 [x] ob prvem zagonu aplikacije naj se v podatkovno bazo avtomatsko zapiše vseh sedem koles, ki jih ima podjetje MESI na razpolago (Šifre in imena koles so poljubne izbire)
 [] za vsako kolo naj bo omogočen pregled zadnje in prihodnje rezervacije, število vseh prevoženih kilometrov in število rezervacij glede na namen izposoje in sektor podjetja
