@@ -1,17 +1,12 @@
 package com.example.app
 
-import android.app.DatePickerDialog
-import android.app.Dialog
 import android.graphics.Color
-import android.icu.util.Calendar
-import android.icu.util.GregorianCalendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -172,7 +167,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSpinnerAdapter(spinner: Spinner, items: Array<String>) {
-        var spinnerAdapter = object : ArrayAdapter<String>(this, R.layout.spinner_row, items) {
+        val spinnerAdapter = object : ArrayAdapter<String>(this, R.layout.spinner_row, items) {
             override fun isEnabled(position: Int): Boolean {
                 //first item is hint, disable
                 return position != 0
