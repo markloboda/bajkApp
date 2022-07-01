@@ -28,6 +28,12 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun getAllActiveReservations() {
+        viewModelScope.launch(Dispatchers.IO) {
+            reservationLive.postValue(repository.getAllActiveReservations())
+        }
+    }
+
     fun insertReservation(reservation: Reservation) {
         viewModelScope.launch(Dispatchers.IO) { repository.insertReservation(reservation) }
     }

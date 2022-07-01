@@ -8,4 +8,10 @@ class BikeRepository(private val bikeDao: BikeDao) {
     suspend fun readBikeById(bikeId: Long) = bikeDao.readBikeById(bikeId)
 
     suspend fun updateBike(bike: Bike) = bikeDao.updateBike(bike)
+
+    suspend fun updateBikes(vararg bikes: Bike) = bikeDao.updateBikes(*bikes)
+
+    suspend fun resetAllBikesAvailability() = bikeDao.resetAllBikesAvailability(true)
+
+    suspend fun setBikeAvailabilityFalse(bikeIds: List<Long>) = bikeDao.setBikeAvailabilityFalse(false, bikeIds)
 }

@@ -30,9 +30,29 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateBike(bike: Bike) {
+    fun update(bike: Bike) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateBike(bike)
         }
+    }
+
+    fun update(vararg bikes: Bike) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateBikes(*bikes)
+        }
+    }
+
+    /*
+    Set all bike availability to true
+    */
+    fun resetAllBikesAvailability() {
+        viewModelScope.launch(Dispatchers.IO) { repository.resetAllBikesAvailability() }
+    }
+
+    /*
+    Set selected bike availability to false
+    */
+    fun setBikeAvailabilityFalse(bikeIds: List<Long>) {
+        viewModelScope.launch(Dispatchers.IO) { repository.setBikeAvailabilityFalse(bikeIds) }
     }
 }

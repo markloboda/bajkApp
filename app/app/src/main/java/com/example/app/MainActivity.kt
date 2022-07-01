@@ -20,6 +20,7 @@ import com.example.app.viewModel.ReservationViewModel
 import com.example.app.viewModel.UserViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,10 +56,7 @@ class MainActivity : AppCompatActivity() {
         // setup swipe refresh
         val swipeRefresh = findViewById<View>(R.id.swipeRefresh) as SwipeRefreshLayout
         swipeRefresh.setOnRefreshListener {
-            // check bike availability
-            // get reservations for today
-
-
+            refreshBikes()
             swipeRefresh.isRefreshing = false
         }
     }
@@ -112,6 +110,15 @@ class MainActivity : AppCompatActivity() {
 
             dialog.findViewById<TextView>(R.id.bikeNumKm)?.text = "${bike.drivenKm} km"
 
+            dialog.findViewById<Button>(R.id.buttonClose)?.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.findViewById<Button>(R.id.buttonRezerviraj)?.setOnClickListener {
+                dialog.dismiss()
+                reservationDataDialog(bike.id, bike.title, bike.status)
+            }
+
             bikeViewModel.bikeLive = MutableLiveData()
         }
         bikeViewModel.readBikeById(bikeId)
@@ -156,7 +163,8 @@ class MainActivity : AppCompatActivity() {
                 userViewModel.userLive.observe(this) { dbUser ->
                     // convert date to long
                     val od = dateFormat.parse("${reservationOdDate.text}-${reservationOdTime.text}")
-                    val doo = dateFormat.parse("${reservationDoDate.text}-${reservationDoTime.text}")
+                    val doo =
+                        dateFormat.parse("${reservationDoDate.text}-${reservationDoTime.text}")
 
                     val km = (reservationKm.progress * 0.5).toInt() // max 50 km ride
                     val namen = reservationNamen.selectedItem.toString()
@@ -186,7 +194,7 @@ class MainActivity : AppCompatActivity() {
                     // update bike km
                     bikeViewModel.bikeLive.observe(this) { bike ->
                         bike.drivenKm += km
-                        bikeViewModel.updateBike(bike)
+                        bikeViewModel.update(bike)
                         bikeViewModel.bikeLive = MutableLiveData()
                         bikeViewModel.bikeLive.removeObservers(this)
                     }
@@ -201,7 +209,6 @@ class MainActivity : AppCompatActivity() {
                 val sektor = reservationSektor.selectedItem.toString()
 
                 userViewModel.getUser(firstName, lastName, sektor)
-
             } else {
                 // TODO: show error message
             }
@@ -293,5 +300,23 @@ class MainActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = milliSeconds
         return dateFormat.format(calendar.time)
+    }
+
+    private fun refreshBikes() {
+        // check bike availability
+        // get reservations where now is between start and end date
+        reservationViewModel.reservationLive.observe(this) { reservations ->
+            val bikeIds = ArrayList<Long>(reservations.size)
+            for (reservation in reservations) {
+                bikeIds.add(reservation!!.bikeId)
+            }
+            // reset all bike availability to true
+            bikeViewModel.resetAllBikesAvailability()
+            // set bikes availability to false where bikeId is in bikeIds
+            bikeViewModel.setBikeAvailabilityFalse(bikeIds)
+
+            reservationViewModel.reservationLive = MutableLiveData()
+        }
+        reservationViewModel.getAllActiveReservations()
     }
 }
