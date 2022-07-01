@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">app</string>
+    <string name="defaultBikeId">#00</string>
+    <string name="defaultBikeTitle">neznan naziv kolesa</string>
+    <string name="defaultBikeStatus">neznano</string>
+    <string name="izposojevalec">Izposojevalec</string>
+    <string name="sektor">Sektor</string>
+    <string name="namen">Namen</string>
+    <string name="rezerviraj">Rezerviraj</string>
+    <string name="km">km</string>
+    <string name="od">OD</string>
+    <string name="doStr">DO</string>
+    <string name="nazaj">Nazaj</string>
+    <string name="sektor_razvoj">razvoj</string>
+    <string name="sektor_prodaja">prodaja</string>
+    <string name="sektor_proizvodnja">proizvodnja</string>
+    <string name="ni_rezervacije">Ni rezervacije</string>
+    <string name="datum">datum</string>
+    <string name="ura">ura</string>
 </resources>
