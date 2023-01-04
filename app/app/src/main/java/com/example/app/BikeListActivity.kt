@@ -16,7 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.app.data.reservation.Reservation
 import com.example.app.recyclerView.BikesRecyclerViewAdapter
 import com.example.app.viewModel.BikeViewModel
-import com.example.app.viewModel.LocationViewModel
+import com.example.app.viewModel.StationViewModel
 import com.example.app.viewModel.ReservationViewModel
 import com.example.app.viewModel.UserViewModel
 import java.text.SimpleDateFormat
@@ -29,7 +29,7 @@ class BikeListActivity : AppCompatActivity() {
     private lateinit var dialog: AlertDialog
 
     private lateinit var bikeViewModel: BikeViewModel
-    private lateinit var locationViewMode: LocationViewModel
+    private lateinit var locationViewMode: StationViewModel
     private lateinit var reservationViewModel: ReservationViewModel
     private lateinit var userViewModel: UserViewModel
 

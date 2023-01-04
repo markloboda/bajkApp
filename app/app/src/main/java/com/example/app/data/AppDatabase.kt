@@ -9,17 +9,17 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.app.data.bike.Bike
 import com.example.app.data.bike.BikeDao
-import com.example.app.data.location.Location
-import com.example.app.data.location.LocationDao
+import com.example.app.data.station.Station
+import com.example.app.data.station.StationDao
 import com.example.app.data.reservation.Reservation
 import com.example.app.data.reservation.ReservationDao
 import com.example.app.data.user.User
 import com.example.app.data.user.UserDao
 
-@Database(entities = [Bike::class, Location::class, User::class, Reservation::class], version = 1, exportSchema = false)
+@Database(entities = [Bike::class, Station::class, User::class, Reservation::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bikeDao(): BikeDao
-    abstract fun locationDao(): LocationDao
+    abstract fun stationDao(): StationDao
     abstract fun userDao(): UserDao
     abstract fun reservationDao(): ReservationDao
 
@@ -47,6 +47,8 @@ abstract class AppDatabase : RoomDatabase() {
                         val values = ContentValues()
                         for (i in 1..10) {
                             values.put("title", "Lokacija $i")
+                            values.put("latitude", 35 + i*3)
+                            values.put("longitude", 10 + i*3)
                             db.insert("location_table", SQLiteDatabase.CONFLICT_REPLACE, values)
                         }
                         values.clear()

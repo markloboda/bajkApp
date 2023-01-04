@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         // Set up the buttons
         findViewById<Button>(R.id.buttonLocations).setOnClickListener {
             // start the location activity
-            val intent = Intent(this, LocationActivity::class.java)
+            val intent = Intent(this, StationActivity::class.java)
             startActivity(intent)
         }
 
