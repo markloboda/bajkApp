@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.app.BikeListActivity
 import com.example.app.MainActivity
 import com.example.app.R
 import com.example.app.data.bike.Bike
@@ -41,7 +42,7 @@ class BikesRecyclerViewAdapter(private val context: Context) :
             else ContextCompat.getColor(holder.bikeStatus.context, R.color.status_green)
         )
         holder.itemView.setOnClickListener {
-            (context as MainActivity).reservationDataDialog(
+            (context as BikeListActivity).reservationDataDialog(
                 currentBike.id,
                 currentBike.title,
                 currentBike.status
@@ -49,7 +50,7 @@ class BikesRecyclerViewAdapter(private val context: Context) :
         }
 
         holder.itemView.setOnLongClickListener {
-            (context as MainActivity).bikeDataDialog(currentBike.id)
+            (context as BikeListActivity).bikeDataDialog(currentBike.id)
             true
         }
     }

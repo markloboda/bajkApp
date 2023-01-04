@@ -33,5 +33,8 @@ class LocationsRecyclerViewAdapter(private val context: Context) :
 
     override fun getItemCount() = locations.size
 
-
+    fun setLocations(locations: List<Location>) {
+        this.locations = locations
+        notifyItemRangeChanged(0, locations.size)
+    }
 }
