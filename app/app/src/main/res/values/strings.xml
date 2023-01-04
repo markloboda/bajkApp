@@ -17,4 +17,6 @@
     <string name="ni_rezervacije">Ni rezervacije</string>
     <string name="datum">datum</string>
     <string name="ura">ura</string>
+    <string name="defaultLocationId">#00</string>
+    <string name="defaultLocationTitle">neznano</string>
 </resources>

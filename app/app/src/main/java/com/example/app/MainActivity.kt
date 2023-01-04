@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                 var previousReservation: Reservation? = null
                 var nextReservation: Reservation? = null
                 for (reservation in reservations) {
-                    if (currentDate < reservation!!.zacetekRezervacije) {
+                    if (currentDate < reservation!!.startTime) {
                         nextReservation = reservation
                         break
                     }
@@ -91,14 +91,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 if (previousReservation != null) {
                     dialog.findViewById<TextView>(R.id.bikeLastReservation)?.text =
-                        "${getDate(previousReservation.zacetekRezervacije)}"
+                        "${getDate(previousReservation.startTime)}"
                 } else {
                     dialog.findViewById<TextView>(R.id.bikeLastReservation)?.text =
                         "Nima rezervacij"
                 }
                 if (nextReservation != null) {
                     dialog.findViewById<TextView>(R.id.bikeNextReservation)?.text =
-                        "${getDate(nextReservation.zacetekRezervacije)}"
+                        "${getDate(nextReservation.startTime)}"
                 } else {
                     dialog.findViewById<TextView>(R.id.bikeNextReservation)?.text =
                         "Nima rezervacij"
@@ -107,8 +107,6 @@ class MainActivity : AppCompatActivity() {
                 reservationViewModel.reservationLive = MutableLiveData()
             }
             reservationViewModel.getAllBikeReservations(bikeId)
-
-            dialog.findViewById<TextView>(R.id.bikeNumKm)?.text = "${bike.drivenKm} km"
 
             dialog.findViewById<Button>(R.id.buttonClose)?.setOnClickListener {
                 dialog.dismiss()
@@ -125,113 +123,116 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun reservationDataDialog(bikeId: Long, bikeTitle: String, bikeStatus: Boolean) {
-        if (!bikeStatus) return
-        dialogBuilder = AlertDialog.Builder(this, R.style.Theme_App)
-        dialogBuilder.setTitle("Izposoja kolesa $bikeTitle")
-        dialogBuilder.setIcon(R.drawable.logo)
-        val dataPopupView: View = layoutInflater.inflate(R.layout.reservation_dialog, null)
+        /*
+            if (!bikeStatus) return
+            dialogBuilder = AlertDialog.Builder(this, R.style.Theme_App)
+            dialogBuilder.setTitle("Izposoja kolesa $bikeTitle")
+            dialogBuilder.setIcon(R.drawable.logo)
+            val dataPopupView: View = layoutInflater.inflate(R.layout.reservation_dialog, null)
 
-        dialogBuilder.setView(dataPopupView)
-        dialog = dialogBuilder.create()
-        dialog.show()
+            dialogBuilder.setView(dataPopupView)
+            dialog = dialogBuilder.create()
+            dialog.show()
 
-        // get view that contain inputed data
-        val reservationIzposojevalec = dialog.findViewById<EditText>(R.id.reservationIzposojevalec)
-        val reservationSektor = dialog.findViewById<Spinner>(R.id.reservationSektor)
-        val reservationOdDate = dialog.findViewById<EditText>(R.id.reservationOdDate)
-        val reservationOdTime = dialog.findViewById<EditText>(R.id.reservationOdTime)
-        val reservationDoDate = dialog.findViewById<EditText>(R.id.reservationDoDate)
-        val reservationDoTime = dialog.findViewById<EditText>(R.id.reservationDoTime)
-        val reservationKm = dialog.findViewById<SeekBar>(R.id.reservationKm)
-        val reservationNamen = dialog.findViewById<Spinner>(R.id.reservationNamen)
+            // get view that contain inputed data
+            val reservationIzposojevalec = dialog.findViewById<EditText>(R.id.reservationIzposojevalec)
+            val reservationSektor = dialog.findViewById<Spinner>(R.id.reservationSektor)
+            val reservationOdDate = dialog.findViewById<EditText>(R.id.reservationOdDate)
+            val reservationOdTime = dialog.findViewById<EditText>(R.id.reservationOdTime)
+            val reservationDoDate = dialog.findViewById<EditText>(R.id.reservationDoDate)
+            val reservationDoTime = dialog.findViewById<EditText>(R.id.reservationDoTime)
+            val reservationKm = dialog.findViewById<SeekBar>(R.id.reservationKm)
+            val reservationNamen = dialog.findViewById<Spinner>(R.id.reservationNamen)
 
-        // setup dialog buttons
-        dataPopupView.findViewById<View>(R.id.reservationConfirmButton).setOnClickListener {
-            if (checkInputs(
-                    reservationIzposojevalec!!,
-                    reservationSektor!!,
-                    reservationOdDate!!,
-                    reservationOdTime!!,
-                    reservationDoDate!!,
-                    reservationDoTime!!,
-                    reservationKm!!,
-                    reservationNamen!!
-                )
-            ) {
-                dialog.dismiss()
+            // setup dialog buttons
+            dataPopupView.findViewById<View>(R.id.reservationConfirmButton).setOnClickListener {
+                if (checkInputs(
+                        reservationIzposojevalec!!,
+                        reservationSektor!!,
+                        reservationOdDate!!,
+                        reservationOdTime!!,
+                        reservationDoDate!!,
+                        reservationDoTime!!,
+                        reservationKm!!,
+                        reservationNamen!!
+                    )
+                ) {
+                    dialog.dismiss()
 
-                userViewModel.userLive.observe(this) { dbUser ->
-                    // convert date to long
-                    val od = dateFormat.parse("${reservationOdDate.text}-${reservationOdTime.text}")
-                    val doo =
-                        dateFormat.parse("${reservationDoDate.text}-${reservationDoTime.text}")
+                    userViewModel.userLive.observe(this) { dbUser ->
+                        // convert date to long
+                        val startTime =
+                            dateFormat.parse("${reservationOdDate.text}-${reservationOdTime.text}")
+                        val endTime =
+                            dateFormat.parse("${reservationDoDate.text}-${reservationDoTime.text}")
 
-                    val km = (reservationKm.progress * 0.5).toInt() // max 50 km ride
-                    val namen = reservationNamen.selectedItem.toString()
-
-
-                    // if user already exists, insert reservation
-                    // else if user doesnt exist, create user and wait for insertion, then get id and insert reservation
-                    if (dbUser == null) {
-                        // create and insert new user
-                        val firstName =
-                            reservationIzposojevalec.text.toString().split(" ")[0].lowercase()
-                        val lastName =
-                            reservationIzposojevalec.text.toString().split(" ")[1].lowercase()
-                        val sektor = reservationSektor.selectedItem.toString().lowercase()
-                        userViewModel.insertUser(firstName, lastName, sektor)
-                        userViewModel.userIdLive.observe(this) { userId ->
+                        // if user already exists, insert reservation
+                        // else if user doesnt exist, create user and wait for insertion, then get id and insert reservation
+                        if (dbUser == null) {
+                            // create and insert new user
+                            val firstName =
+                                reservationIzposojevalec.text.toString().split(" ")[0].lowercase()
+                            val lastName =
+                                reservationIzposojevalec.text.toString().split(" ")[1].lowercase()
+                            val sektor = reservationSektor.selectedItem.toString().lowercase()
+                            userViewModel.insertUser(firstName, lastName, sektor)
+                            userViewModel.userIdLive.observe(this) { userId ->
+                                // create and insert new reservation
+                                insertReservation(
+                                    userId,
+                                    bikeId,
+                                    startTime!!.time,
+                                    endTime!!.time,
+                                )
+                                userViewModel.userIdLive = MutableLiveData()
+                                userViewModel.userIdLive.removeObservers(this)
+                            }
+                        } else {
                             // create and insert new reservation
-                            insertReservation(userId, bikeId, od!!.time, doo!!.time, km, namen)
-                            userViewModel.userIdLive = MutableLiveData()
-                            userViewModel.userIdLive.removeObservers(this)
+                            insertReservation(dbUser.id, bikeId)
                         }
-                    } else {
-                        // create and insert new reservation
-                        insertReservation(dbUser.id, bikeId, od!!.time, doo!!.time, km, namen)
+
+                        // update bike km
+                        bikeViewModel.bikeLive.observe(this) { bike ->
+                            bikeViewModel.update(bike)
+                            bikeViewModel.bikeLive = MutableLiveData()
+                            bikeViewModel.bikeLive.removeObservers(this)
+                        }
+                        bikeViewModel.readBikeById(bikeId)
+
+                        userViewModel.userLive = MutableLiveData()
+                        userViewModel.userLive.removeObservers(this)
                     }
 
-                    // update bike km
-                    bikeViewModel.bikeLive.observe(this) { bike ->
-                        bike.drivenKm += km
-                        bikeViewModel.update(bike)
-                        bikeViewModel.bikeLive = MutableLiveData()
-                        bikeViewModel.bikeLive.removeObservers(this)
-                    }
-                    bikeViewModel.readBikeById(bikeId)
+                    val firstName = reservationIzposojevalec.text.toString().split(" ")[0]
+                    val lastName = reservationIzposojevalec.text.toString().split(" ")[1]
+                    val sektor = reservationSektor.selectedItem.toString()
 
-                    userViewModel.userLive = MutableLiveData()
-                    userViewModel.userLive.removeObservers(this)
+                    userViewModel.getUser(firstName, lastName, sektor)
+                } else {
+                    // TODO: show error message
                 }
-
-                val firstName = reservationIzposojevalec.text.toString().split(" ")[0]
-                val lastName = reservationIzposojevalec.text.toString().split(" ")[1]
-                val sektor = reservationSektor.selectedItem.toString()
-
-                userViewModel.getUser(firstName, lastName, sektor)
-            } else {
-                // TODO: show error message
             }
-        }
-        // setup spinners
-        setupSpinnerAdapter(reservationSektor!!, resources.getStringArray(R.array.sektor))
-        setupSpinnerAdapter(reservationNamen!!, resources.getStringArray(R.array.namen))
+            // setup spinners
+            setupSpinnerAdapter(reservationSektor!!, resources.getStringArray(R.array.sektor))
+            setupSpinnerAdapter(reservationNamen!!, resources.getStringArray(R.array.namen))
 
-        dataPopupView.findViewById<View>(R.id.reservationBackButton).setOnClickListener {
-            dialog.dismiss()
-        }
+            dataPopupView.findViewById<View>(R.id.reservationBackButton).setOnClickListener {
+                dialog.dismiss()
+            }
+        */
     }
 
     private fun insertReservation(
         userId: Long,
         bikeId: Long,
-        reservationOd: Long,
-        reservationDo: Long,
-        prevozeniKm: Int,
-        namen: String
+        startLocationId: Long,
+        endLocationId: Long,
+        startTime: Long,
+        endTime: Long
     ) {
         val reservation =
-            Reservation(userId, bikeId, reservationOd, reservationDo, prevozeniKm, namen)
+            Reservation(userId, bikeId, startLocationId, endLocationId, startTime, endTime)
         reservationViewModel.insertReservation(reservation)
     }
 

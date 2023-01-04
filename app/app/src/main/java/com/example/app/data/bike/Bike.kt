@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "bike_table")
 data class Bike(
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "drivenKm") var drivenKm: Int,
+    @ColumnInfo(name = "location_id") val locationId: Long,
     @ColumnInfo(name = "status") var status: Boolean
 ) {
     @PrimaryKey(autoGenerate = true)
