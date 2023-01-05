@@ -47,8 +47,8 @@ abstract class AppDatabase : RoomDatabase() {
                         val values = ContentValues()
                         for (i in 1..10) {
                             values.put("title", "Lokacija $i")
-                            values.put("latitude", 35 + i*3)
-                            values.put("longitude", 10 + i*3)
+                            values.put("latitude", 46.068860 + i/100.0)
+                            values.put("longitude", 14.544827 + i/100.0)
                             db.insert("location_table", SQLiteDatabase.CONFLICT_REPLACE, values)
                         }
                         values.clear()
@@ -57,8 +57,7 @@ abstract class AppDatabase : RoomDatabase() {
                         /// generate 50 bikes and assign them to a random location
                         for (i in 1..50) {
                             values.put("title", "Bicikl $i")
-                            values.put("location_id", (1..10).random())
-                            values.put("status", (0..1).random())
+                            values.put("station_id", (1..10).random())
                             db.insert("bike_table", SQLiteDatabase.CONFLICT_REPLACE, values)
                         }
                         db.setTransactionSuccessful()

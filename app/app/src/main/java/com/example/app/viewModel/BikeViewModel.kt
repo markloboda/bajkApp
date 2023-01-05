@@ -13,9 +13,10 @@ import kotlinx.coroutines.launch
 
 class BikeViewModel(application: Application) : AndroidViewModel(application) {
 
-    val allBikes: LiveData<List<Bike>>
     val repository: BikeRepository
+    val allBikes: LiveData<List<Bike>>
     var bikeLive: MutableLiveData<Bike> = MutableLiveData()
+    var bikesByStationId: MutableLiveData<List<Bike>> = MutableLiveData()
 
     init {
         val bikeDao = AppDatabase.getDatabase(application).bikeDao()
@@ -30,6 +31,13 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun readBikesByStationId(stationId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val readBikes = repository.readBikesByStationId(stationId)
+            bikesByStationId.postValue(readBikes)
+        }
+    }
+
     fun update(bike: Bike) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateBike(bike)
@@ -40,19 +48,5 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateBikes(*bikes)
         }
-    }
-
-    /*
-    Set all bike availability to true
-    */
-    fun resetAllBikesAvailability() {
-        viewModelScope.launch(Dispatchers.IO) { repository.resetAllBikesAvailability() }
-    }
-
-    /*
-    Set selected bike availability to false
-    */
-    fun setBikeAvailabilityFalse(bikeIds: List<Long>) {
-        viewModelScope.launch(Dispatchers.IO) { repository.setBikeAvailabilityFalse(bikeIds) }
     }
 }

@@ -20,7 +20,6 @@ class BikesRecyclerViewAdapter(private val context: Context) :
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val bikeId = view.findViewById<TextView>(R.id.bikeIdTextView)
         val bikeTitle = view.findViewById<TextView>(R.id.bikeTitleTextView)
-        val bikeStatus = view.findViewById<TextView>(R.id.bikeStatusTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,26 +32,6 @@ class BikesRecyclerViewAdapter(private val context: Context) :
         val currentBike = bikes[position]
         holder.bikeId.text = currentBike.id.toString()
         holder.bikeTitle.text = currentBike.title
-        holder.bikeStatus.text = if (currentBike.status) "Na voljo" else "Izposojen"
-        holder.bikeStatus.setTextColor(
-            if (currentBike.status) ContextCompat.getColor(
-                holder.bikeStatus.context,
-                R.color.status_red
-            )
-            else ContextCompat.getColor(holder.bikeStatus.context, R.color.status_green)
-        )
-        holder.itemView.setOnClickListener {
-            (context as BikeListActivity).reservationDataDialog(
-                currentBike.id,
-                currentBike.title,
-                currentBike.status
-            )
-        }
-
-        holder.itemView.setOnLongClickListener {
-            (context as BikeListActivity).bikeDataDialog(currentBike.id)
-            true
-        }
     }
 
     override fun getItemCount() = bikes.size

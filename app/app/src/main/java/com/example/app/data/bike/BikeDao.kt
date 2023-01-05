@@ -11,11 +11,8 @@ interface BikeDao {
     @Query("SELECT * FROM bike_table WHERE id=:bikeId")
     suspend fun readBikeById(bikeId: Long): Bike?
 
-    @Query("UPDATE bike_table SET status=:trueBool")
-    suspend fun resetAllBikesAvailability(trueBool: Boolean)
-
-    @Query("UPDATE bike_table SET status=:falseBool WHERE id IN (:bikeIds)")
-    suspend fun setBikeAvailabilityFalse(falseBool: Boolean, bikeIds: List<Long>)
+    @Query("SELECT * FROM bike_table WHERE station_id=:stationId")
+    fun readBikesByStationId(stationId: Long): List<Bike>
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun updateBike(bike: Bike)

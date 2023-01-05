@@ -20,8 +20,10 @@
         </activity>
         <activity
             android:name=".StationActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
+        <activity
+            android:name=".BikeListActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
