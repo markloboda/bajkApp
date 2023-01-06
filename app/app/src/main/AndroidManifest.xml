@@ -34,7 +34,7 @@
             android:name=".BikeListActivity"
             android:exported="true" />
         <activity
-            android:name=".QRCodeActivity"
+            android:name=".RequestActivity"
             android:exported="true" />
     </application>
 

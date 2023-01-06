@@ -19,14 +19,14 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.buttonStart).setOnClickListener {
             // start the qr code activity
-            val intent = Intent(this, QRCodeActivity::class.java)
+            val intent = Intent(this, RequestActivity::class.java)
             intent.putExtra("requestCode", 0)
             startActivity(intent)
         }
 
         findViewById<Button>(R.id.buttonEnd).setOnClickListener {
             // start the qr code activity
-            val intent = Intent(this, QRCodeActivity::class.java)
+            val intent = Intent(this, RequestActivity::class.java)
             intent.putExtra("requestCode", 1)
             startActivity(intent)
         }
