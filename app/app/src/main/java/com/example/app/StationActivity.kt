@@ -45,14 +45,14 @@ class StationActivity : AppCompatActivity() {
             locations?.let { adapter.setLocations(it) }
         }
 
-        requestGPS()
-
         // setup swipe refresh
         val swipeRefresh = findViewById<View>(R.id.swipeRefresh) as SwipeRefreshLayout
         swipeRefresh.setOnRefreshListener {
             refreshStations()
             swipeRefresh.isRefreshing = false
         }
+
+        refreshStations()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -71,10 +71,8 @@ class StationActivity : AppCompatActivity() {
             // Update the cached copy of the locations in the sortedLocations in the ViewModel.
             locations?.let {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
-                }
-
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && isGPSEnabled()) {
+                    requestGPS()
+                } else {
                     fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
                         if (location != null) {
                             // Sort locations in by distance from user in recyclerView
