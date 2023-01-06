@@ -9,24 +9,40 @@ import androidx.lifecycle.viewModelScope
 import com.example.app.data.AppDatabase
 import com.example.app.data.station.Station
 import com.example.app.data.station.StationRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StationViewModel(application: Application) : AndroidViewModel(application) {
 
-    val allLocations: LiveData<List<Station>>
+    val allStations: LiveData<List<Station>>
     val repository: StationRepository
-    val sortedLocations: MutableLiveData<List<Station>> = MutableLiveData()
+    val sortedStations: MutableLiveData<List<Station>> = MutableLiveData()
+    val stationLive: MutableLiveData<Station> = MutableLiveData()
 
     init {
         val stationDao = AppDatabase.getDatabase(application).stationDao()
         repository = StationRepository(stationDao)
-        allLocations = repository.readAllLocations
+        allStations = repository.readAllLocations
     }
 
     fun sortLocationsByDistance(location: Location) {
-        val locations = allLocations.value
+        val locations = allStations.value
         if (locations != null) {
             val sortedLocations = locations.sortedBy { it.distanceTo(location) }
-            this.sortedLocations.value = sortedLocations
+            this.sortedStations.postValue(sortedLocations)
+        }
+    }
+
+    fun readStationById(stationId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val station = repository.readStationById(stationId)
+            stationLive.postValue(station)
+        }
+    }
+
+    fun updateStation(station: Station) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateStation(station)
         }
     }
 }

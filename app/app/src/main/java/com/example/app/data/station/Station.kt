@@ -5,13 +5,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable.Param
 
 @Entity(tableName = "location_table")
 data class Station(
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "latitude") val latitude: Double,
-    @ColumnInfo(name = "longitude") val longitude: Double
+    @ColumnInfo(name = "longitude") val longitude: Double,
+    @ColumnInfo(name = "spot_status") var spotStatus: String
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

@@ -35,12 +35,12 @@ class StationActivity : AppCompatActivity() {
 
         // ViewModel
         stationViewModel = androidx.lifecycle.ViewModelProvider(this)[StationViewModel::class.java]
-        stationViewModel.sortedLocations.observe(this) { locations ->
+        stationViewModel.sortedStations.observe(this) { locations ->
             // Update the cached copy of the locations in the adapter.
             locations?.let { adapter.setLocations(it) }
         }
 
-        stationViewModel.allLocations.observe(this) { locations ->
+        stationViewModel.allStations.observe(this) { locations ->
             // Update the cached copy of the locations in the sortedLocations in the ViewModel.
             locations?.let {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

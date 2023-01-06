@@ -1,25 +1,19 @@
 package com.example.app
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.app.recyclerView.BikesRecyclerViewAdapter
 import com.example.app.viewModel.BikeViewModel
-import com.example.app.viewModel.StationViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 class BikeListActivity : AppCompatActivity() {
 
     private lateinit var bikeViewModel: BikeViewModel
-    private lateinit var locationViewModel: StationViewModel
 
     private var stationId: Long = -1
     private lateinit var stationTitle: String
