@@ -1,18 +1,14 @@
 package com.example.app.recyclerView
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.app.BikeListActivity
-import com.example.app.MainActivity
 import com.example.app.R
 import com.example.app.data.bike.Bike
 
-class BikesRecyclerViewAdapter(private val context: Context) :
+class BikesRecyclerViewAdapter :
     RecyclerView.Adapter<BikesRecyclerViewAdapter.ViewHolder>() {
 
     private var bikes: List<Bike> = listOf()

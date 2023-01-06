@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.app.data.AppDatabase
-import com.example.app.data.bike.BikeRepository
 import com.example.app.data.bike.Bike
+import com.example.app.data.bike.BikeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -16,7 +16,7 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
     val repository: BikeRepository
     val allBikes: LiveData<List<Bike>>
     var bikeLive: MutableLiveData<Bike> = MutableLiveData()
-    var bikesByStationId: MutableLiveData<List<Bike>> = MutableLiveData()
+    var bikesByStationId: MutableLiveData<List<Bike?>> = MutableLiveData()
 
     init {
         val bikeDao = AppDatabase.getDatabase(application).bikeDao()
@@ -33,8 +33,7 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun readBikesByStationId(stationId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            val readBikes = repository.readBikesByStationId(stationId)
-            bikesByStationId.postValue(readBikes)
+            bikesByStationId.postValue(repository.readBikesByStationId(stationId))
         }
     }
 

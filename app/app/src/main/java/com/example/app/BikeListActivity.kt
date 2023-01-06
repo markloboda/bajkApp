@@ -34,15 +34,17 @@ class BikeListActivity : AppCompatActivity() {
         // RecyclerView
         val recyclerView: RecyclerView = findViewById(R.id.bikesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = BikesRecyclerViewAdapter(this)
+        val adapter = BikesRecyclerViewAdapter()
         recyclerView.adapter = adapter
 
         // ViewModel
         bikeViewModel = ViewModelProvider(this)[BikeViewModel::class.java]
         bikeViewModel.bikesByStationId.observe(this) { bikes ->
-            adapter.setBikes(bikes)
+            bikes.let {
+                adapter.setBikes(bikes.filterNotNull())
+            }
         }
-        refreshBikes()
+        bikeViewModel.readBikesByStationId(stationId)
 
         // setup swipe refresh
         val swipeRefresh = findViewById<View>(R.id.swipeRefresh) as SwipeRefreshLayout

@@ -11,8 +11,8 @@ interface BikeDao {
     @Query("SELECT * FROM bike_table WHERE id=:bikeId")
     suspend fun readBikeById(bikeId: Long): Bike?
 
-    @Query("SELECT * FROM bike_table WHERE station_id=:stationId")
-    suspend fun readBikesByStationId(stationId: Long): List<Bike>
+    @Query("SELECT * FROM bike_table WHERE station_id = :stationId")
+    suspend fun readBikesByStationId(stationId: Long): List<Bike?>
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun updateBike(bike: Bike)

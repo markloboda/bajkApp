@@ -41,48 +41,28 @@ abstract class AppDatabase : RoomDatabase() {
                         super.onCreate(db)
 
                         // generate some dummy data
-                        // create a list of stations
-                        val spotStatusStr = "1,1,1,1,1,1,0,0,0,0"
-                        val stations = mutableListOf(
-                            Station("Station 1", 52.520008, 13.404954, spotStatusStr),
-                            Station("Station 2", 52.520008, 13.404954, spotStatusStr),
-                            Station("Station 3", 52.520008, 13.404954, spotStatusStr),
-                            Station("Station 4", 52.520008, 13.404954, spotStatusStr),
-                            Station("Station 5", 52.520008, 13.404954, spotStatusStr),
-                            Station("Station 6", 52.520008, 13.404954, spotStatusStr),
-                            Station("Station 7", 52.520008, 13.404954, spotStatusStr),
-                            Station("Station 8", 52.520008, 13.404, spotStatusStr)
-                        )
-
-                        // create a list of bikes
-                        val bikes = mutableListOf<Bike>()
-                        for (station in stations) {
-                            for (i in 0..5) {
-                                bikes.add(Bike("Bajk ${station.id * i}", station.id, i.toLong()))
-                            }
-                        }
-
-                        // insert stations and bikes into the database
                         db.beginTransaction()
-
+                        // stations
                         val values = ContentValues()
-
-                        for (station in stations) {
-                            values.put("title", station.title)
-                            values.put("latitude", station.latitude)
-                            values.put("longitude", station.longitude)
-                            values.put("spot_status", station.spotStatus)
+                        for (i in 1..10) {
+                            values.put("title", "Station $i")
+                            values.put("latitude", 52.0 + i)
+                            values.put("longitude", 13.0 + i)
+                            values.put("spot_status", "1,1,1,1,1,0,0,0,0,0")
                             db.insert("location_table", 0, values)
                         }
 
                         values.clear()
-                        for (bike in bikes) {
-                            values.put("title", bike.title)
-                            values.put("station_id", bike.locationId)
-                            values.put("spot_id", bike.spotId)
-                            db.insert("bike_table", 0, values)
-                        }
 
+                        // bikes
+                        for (i in 1..10) {
+                            for (j in 0..4) {
+                                values.put("title", "Bike ${i} ${j}")
+                                values.put("station_id", i)
+                                values.put("spot_id", j)
+                                db.insert("bike_table", 0, values)
+                            }
+                        }
                         db.setTransactionSuccessful()
                         db.endTransaction()
                     }

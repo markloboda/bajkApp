@@ -7,7 +7,7 @@ class BikeRepository(private val bikeDao: BikeDao) {
 
     suspend fun readBikeById(bikeId: Long) = bikeDao.readBikeById(bikeId)
 
-    suspend fun readBikesByStationId(stationId: Long) = bikeDao.readBikesByStationId(stationId)
+    suspend fun readBikesByStationId(stationId: Long): List<Bike?> = bikeDao.readBikesByStationId(stationId)
 
     suspend fun updateBike(bike: Bike) = bikeDao.updateBike(bike)
 
