@@ -65,11 +65,6 @@ class RequestActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        this.finish()
-    }
-
     fun bikeRequest(qrCode: String) {
         val qrCodeSplit = qrCode.split(" ")
         if (qrCodeSplit[0] != "mbajkparking") {
