@@ -74,8 +74,8 @@ Tu pa se nato izvede SQL stavek, ki pa nato vrnjeno vrne nazaj gor po verigi. Ko
 
 ## 3.3. Uporabniški vmesnik
 
-<img src="report_imgs/Screenshot_20230107-220444.jpg" width="500px">
-<img src="report_imgs/Screenshot_20230107-220451.jpg" width="500px">
-<img src="report_imgs/Screenshot_20230107-220509.jpg" width="500px">
-<img src="report_imgs/Screenshot_20230107-220757.jpg" width="500px">
-<img src="report_imgs/Screenshot_20230107-220853.jpg" width="500px">
+<img src="report_imgs/Screenshot_20230107-220444.jpg" width="200px">
+<img src="report_imgs/Screenshot_20230107-220451.jpg" width="200px">
+<img src="report_imgs/Screenshot_20230107-220509.jpg" width="200px">
+<img src="report_imgs/Screenshot_20230107-220757.jpg" width="200px">
+<img src="report_imgs/Screenshot_20230107-220853.jpg" width="200px">
