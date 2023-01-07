@@ -26,5 +26,4 @@ class RequestSuccessFragment : Fragment(R.layout.request_success_fragment) {
         }
         gifImageView.setImageDrawable(gifDrawable)
     }
-
 }

@@ -17,6 +17,8 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
     val allBikes: LiveData<List<Bike>>
     var bikeLive: MutableLiveData<Bike> = MutableLiveData()
     var bikesByStationId: MutableLiveData<List<Bike?>> = MutableLiveData()
+    var bikeByStationIdAndSpotIndex: MutableLiveData<Bike?> = MutableLiveData()
+    var updateFlag: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         val bikeDao = AppDatabase.getDatabase(application).bikeDao()
@@ -37,15 +39,34 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun readBikeByStationIdAndSpotIndex(stationId: Long, spotIndex: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val bike = repository.readBikeByStationIdAndSpotIndex(stationId, spotIndex)
+            bikeByStationIdAndSpotIndex.postValue(bike)
+        }
+    }
+
     fun update(bike: Bike) {
+        updateFlag.postValue(false)
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateBike(bike)
+            updateFlag.postValue(true)
         }
     }
 
     fun update(vararg bikes: Bike) {
+        updateFlag.postValue(false)
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateBikes(*bikes)
+            updateFlag.postValue(true)
+        }
+    }
+
+    fun updateBike(bikeId: Long, stationId: Long, spotIndex: Int) {
+        updateFlag.postValue(false)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateBike(bikeId, stationId, spotIndex)
+            updateFlag.postValue(true)
         }
     }
 }

@@ -1,13 +1,15 @@
 package com.example.app
 
 import android.content.pm.PackageManager
-import android.graphics.drawable.TransitionDrawable
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.app.data.user.User
+import com.example.app.viewModel.BikeViewModel
 import com.example.app.viewModel.StationViewModel
+import com.example.app.viewModel.UserViewModel
 import com.google.common.util.concurrent.ListenableFuture
 import java.util.concurrent.ExecutionException
 
@@ -15,25 +17,28 @@ class RequestActivity : AppCompatActivity() {
 
     val PERMISSION_REQUEST_CAMERA = 0
 
+    private var qrCodeCount = 0
+
     private lateinit var stationViewModel: StationViewModel
+    private lateinit var bikeViewModel: BikeViewModel
+    private lateinit var userViewModel: UserViewModel
 
     lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
-
-    private lateinit var colorFilterTransition: TransitionDrawable
 
     // fragments
     private lateinit var scanQRFragment: ScanQRFragment
 
     var requestCode: Int = -1
+    lateinit var user: User
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.request_activity)
 
         stationViewModel = ViewModelProvider(this)[StationViewModel::class.java]
+        bikeViewModel = ViewModelProvider(this)[BikeViewModel::class.java]
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         scanQRFragment = ScanQRFragment()
-
-        colorFilterTransition = getDrawable(R.drawable.request_failed_color_filter_transition) as TransitionDrawable
 
         supportFragmentManager.beginTransaction()
             .add(R.id.mainFragmentContainer, scanQRFragment)
@@ -46,6 +51,22 @@ class RequestActivity : AppCompatActivity() {
             finish()
         }
 
+        // get user
+        val phone = intent.getStringExtra("phone")!!
+        userViewModel.userByPhone.observe(this) { user ->
+            if (user != null) {
+                this.user = user
+            } else {
+                Toast.makeText(this, "Error: User not found", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
+        userViewModel.getUserByPhone(phone)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        this.finish()
     }
 
     fun bikeRequest(qrCode: String) {
@@ -58,26 +79,47 @@ class RequestActivity : AppCompatActivity() {
         val stationId = qrCodeSplit[1].toLong()
         val spotIndex = qrCodeSplit[2].toInt()
 
-        // Check if spot has bike
-        stationViewModel.stationLive.observe(this) { station ->
-            if (station != null) {
-                val spotStatus = station.spotStatus.split(",").toMutableList()
-                if (spotStatus[spotIndex] == "1" && requestCode == 1) {
-                    showRequestFail("That parking spot is not available.")
-                } else if (spotStatus[spotIndex] == "0" && requestCode == 0) {
-                    showRequestFail("There is no bike in that parking spot.")
-                } else {
+        // Get the bike (if any) at the spot
+        bikeViewModel.bikeByStationIdAndSpotIndex.observe(this) { bike ->
+            if (bike == null && requestCode == 1) {
+                //
+                // Return bike
+                //
 
-                    spotStatus[spotIndex] = requestCode.toString()
-                    station.spotStatus = spotStatus.joinToString(",")
-                    stationViewModel.updateStation(station)
+                // Get the bike from the user
+                val bikeId = user.bikeId
 
-                    showRequestSuccessFragmentAndFinish(if (requestCode == 1) "Bike return successfully!" else "Bike unlocked!");
+                // Update the bike
+                bikeViewModel.updateBike(bikeId, stationId, spotIndex)
+
+                // Update the user
+                userViewModel.updateUserBike(user.id, -1)
+
+                // Response to user
+                showRequestSuccessFragmentAndFinish("Bike returned successfully!")
+            } else if (bike != null && requestCode == 0) {
+                //
+                // Take bike
+                //
+
+                // Update the bike
+                bikeViewModel.updateBike(bike.id, -1, -1)
+
+                // Update the user
+                userViewModel.updateUserBike(user.id, bike.id)
+
+                // Response to user
+                showRequestSuccessFragmentAndFinish("Bike unlocked!")
+            } else {
+                // INVALID REQUEST
+                if (requestCode == 0) {
+                    showRequestFail("Bike already taken!")
+                } else if (requestCode == 1) {
+                    showRequestFail("Parking spot is taken!")
                 }
             }
         }
-
-        stationViewModel.readStationById(stationId.toLong())
+        bikeViewModel.readBikeByStationIdAndSpotIndex(stationId, spotIndex)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

@@ -48,7 +48,7 @@ abstract class AppDatabase : RoomDatabase() {
                             values.put("title", "Station $i")
                             values.put("latitude", 52.0 + i)
                             values.put("longitude", 13.0 + i)
-                            values.put("spot_status", "1,1,1,1,1,0,0,0,0,0")
+                            values.put("parking_count", 10)
                             db.insert("location_table", 0, values)
                         }
 
@@ -59,7 +59,7 @@ abstract class AppDatabase : RoomDatabase() {
                             for (j in 0..4) {
                                 values.put("title", "Bike ${i} ${j}")
                                 values.put("station_id", i)
-                                values.put("spot_id", j)
+                                values.put("spot_index", j)
                                 db.insert("bike_table", 0, values)
                             }
                         }

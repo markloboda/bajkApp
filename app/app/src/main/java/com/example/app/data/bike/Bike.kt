@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class Bike(
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "station_id") val stationId: Long,
-    @ColumnInfo(name = "spot_id") val spotId: Long
+    @ColumnInfo(name = "spot_index") val spotIndex: Int
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

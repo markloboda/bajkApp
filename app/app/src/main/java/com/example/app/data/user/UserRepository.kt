@@ -2,9 +2,19 @@ package com.example.app.data.user
 
 class UserRepository(private val userDao: UserDao) {
 
-    suspend fun getUser(ime: String, priimek: String, sektor: String) = userDao.getUser(ime.lowercase(), priimek.lowercase(), sektor.lowercase())
+    fun getUser(id: Int) = userDao.getUser(id)
+
+    fun getUserByPhone(phone: String) = userDao.getUserByPhone(phone)
 
     suspend fun insertUser(user: User): Long {
         return userDao.insertUser(user)
+    }
+
+    suspend fun updateUser(user: User) {
+        userDao.updateUser(user)
+    }
+
+    suspend fun updateUserBike(userId: Long, bikeId: Long) {
+        userDao.updateUserBike(userId, bikeId)
     }
 }
