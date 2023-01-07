@@ -6,16 +6,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.app.data.AppDatabase
-import com.example.app.data.bike.BikeRepository
 import com.example.app.data.bike.Bike
+import com.example.app.data.bike.BikeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class BikeViewModel(application: Application) : AndroidViewModel(application) {
 
-    val allBikes: LiveData<List<Bike>>
     val repository: BikeRepository
+    val allBikes: LiveData<List<Bike>>
     var bikeLive: MutableLiveData<Bike> = MutableLiveData()
+    var bikesByStationId: MutableLiveData<List<Bike?>> = MutableLiveData()
+    var bikeByStationIdAndSpotIndex: MutableLiveData<Bike?> = MutableLiveData()
+    var updateFlag: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         val bikeDao = AppDatabase.getDatabase(application).bikeDao()
@@ -30,29 +33,40 @@ class BikeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun readBikesByStationId(stationId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            bikesByStationId.postValue(repository.readBikesByStationId(stationId))
+        }
+    }
+
+    fun readBikeByStationIdAndSpotIndex(stationId: Long, spotIndex: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val bike = repository.readBikeByStationIdAndSpotIndex(stationId, spotIndex)
+            bikeByStationIdAndSpotIndex.postValue(bike)
+        }
+    }
+
     fun update(bike: Bike) {
+        updateFlag.postValue(false)
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateBike(bike)
+            updateFlag.postValue(true)
         }
     }
 
     fun update(vararg bikes: Bike) {
+        updateFlag.postValue(false)
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateBikes(*bikes)
+            updateFlag.postValue(true)
         }
     }
 
-    /*
-    Set all bike availability to true
-    */
-    fun resetAllBikesAvailability() {
-        viewModelScope.launch(Dispatchers.IO) { repository.resetAllBikesAvailability() }
-    }
-
-    /*
-    Set selected bike availability to false
-    */
-    fun setBikeAvailabilityFalse(bikeIds: List<Long>) {
-        viewModelScope.launch(Dispatchers.IO) { repository.setBikeAvailabilityFalse(bikeIds) }
+    fun updateBike(bikeId: Long, stationId: Long, spotIndex: Int) {
+        updateFlag.postValue(false)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateBike(bikeId, stationId, spotIndex)
+            updateFlag.postValue(true)
+        }
     }
 }

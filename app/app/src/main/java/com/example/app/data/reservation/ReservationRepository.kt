@@ -1,6 +1,5 @@
 package com.example.app.data.reservation
 
-import com.example.app.data.bike.Bike
 import java.util.*
 
 class ReservationRepository(private val reservationDao: ReservationDao) {

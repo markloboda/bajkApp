@@ -1,17 +1,14 @@
 package com.example.app.recyclerView
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.app.MainActivity
 import com.example.app.R
 import com.example.app.data.bike.Bike
 
-class BikesRecyclerViewAdapter(private val context: Context) :
+class BikesRecyclerViewAdapter :
     RecyclerView.Adapter<BikesRecyclerViewAdapter.ViewHolder>() {
 
     private var bikes: List<Bike> = listOf()
@@ -19,7 +16,6 @@ class BikesRecyclerViewAdapter(private val context: Context) :
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val bikeId = view.findViewById<TextView>(R.id.bikeIdTextView)
         val bikeTitle = view.findViewById<TextView>(R.id.bikeTitleTextView)
-        val bikeStatus = view.findViewById<TextView>(R.id.bikeStatusTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,26 +28,6 @@ class BikesRecyclerViewAdapter(private val context: Context) :
         val currentBike = bikes[position]
         holder.bikeId.text = currentBike.id.toString()
         holder.bikeTitle.text = currentBike.title
-        holder.bikeStatus.text = if (currentBike.status) "Na voljo" else "Izposojen"
-        holder.bikeStatus.setTextColor(
-            if (currentBike.status) ContextCompat.getColor(
-                holder.bikeStatus.context,
-                R.color.status_red
-            )
-            else ContextCompat.getColor(holder.bikeStatus.context, R.color.status_green)
-        )
-        holder.itemView.setOnClickListener {
-            (context as MainActivity).reservationDataDialog(
-                currentBike.id,
-                currentBike.title,
-                currentBike.status
-            )
-        }
-
-        holder.itemView.setOnLongClickListener {
-            (context as MainActivity).bikeDataDialog(currentBike.id)
-            true
-        }
     }
 
     override fun getItemCount() = bikes.size
