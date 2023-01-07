@@ -14,7 +14,7 @@ import com.example.app.viewModel.UserViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var userViewModel: UserViewModel
-    private var user: MutableLiveData<User> = MutableLiveData()
+    private var _user: MutableLiveData<User> = MutableLiveData()
 
     private lateinit var editTextPhone: EditText
     private lateinit var confirmButton: Button
@@ -33,11 +33,6 @@ class MainActivity : AppCompatActivity() {
             setUser()
         }
 
-        val phone = editTextPhone.text.toString()
-        if (phone.length != 9) {
-            setUser()
-        }
-
         // Set up the buttons
         findViewById<Button>(R.id.buttonLocations).setOnClickListener {
             // start the location activity
@@ -51,17 +46,15 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val user = _user.value!!
             // start the qr code activity
-            user.observe(this) { user ->
-                if (user.bikeId.toInt() == -1) {
-                    val intent = Intent(this, RequestActivity::class.java)
-                    intent.putExtra("requestCode", 0)
-                    intent.putExtra("phone", user.phone)
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this, "You already have a bike", Toast.LENGTH_SHORT).show()
-                }
-                return@observe
+            if (user.bikeId.toInt() == -1) {
+                val intent = Intent(this, RequestActivity::class.java)
+                intent.putExtra("requestCode", 0)
+                intent.putExtra("phone", user.phone)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "You already have a bike", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -71,18 +64,24 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val user = _user.value!!
             // start the qr code activity
-            user.observe(this) { user ->
-                if (user.bikeId.toInt() != -1) {
-                    val intent = Intent(this, RequestActivity::class.java)
-                    intent.putExtra("requestCode", 1)
-                    intent.putExtra("phone", user.phone)
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this, "You don't have a bike", Toast.LENGTH_SHORT).show()
-                }
-                return@observe
+            if (user.bikeId.toInt() != -1) {
+                val intent = Intent(this, RequestActivity::class.java)
+                intent.putExtra("requestCode", 1)
+                intent.putExtra("phone", user.phone)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "You don't have a bike", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        confirmed = false
+        if (findViewById<EditText>(R.id.editTextPhone).text.length == 9) {
+            setUser()
         }
     }
 
@@ -100,10 +99,10 @@ class MainActivity : AppCompatActivity() {
                 // add user to database
                 val newUser = User(phone, "user", "user")
                 userViewModel.insertUser(newUser)
-                user.postValue(newUser)
+                this._user.postValue(newUser)
                 confirmed = true
             } else {
-                user.postValue(_user)
+                this._user.postValue(_user)
                 confirmed = true
             }
         }

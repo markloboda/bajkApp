@@ -38,12 +38,7 @@ class RequestActivity : AppCompatActivity() {
         stationViewModel = ViewModelProvider(this)[StationViewModel::class.java]
         bikeViewModel = ViewModelProvider(this)[BikeViewModel::class.java]
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-        scanQRFragment = ScanQRFragment()
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.mainFragmentContainer, scanQRFragment)
-            .addToBackStack(null)
-            .commit()
 
         requestCode = intent.getIntExtra("requestCode", -1)
         if (requestCode == -1) {
@@ -62,6 +57,12 @@ class RequestActivity : AppCompatActivity() {
             }
         }
         userViewModel.getUserByPhone(phone)
+
+        scanQRFragment = ScanQRFragment()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.mainFragmentContainer, scanQRFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onBackPressed() {
