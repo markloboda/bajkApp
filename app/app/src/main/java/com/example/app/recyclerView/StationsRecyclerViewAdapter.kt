@@ -48,6 +48,8 @@ class StationsRecyclerViewAdapter(private val context: Context) :
             intent.putExtra("address", currentLocation.address)
             intent.putExtra("stationId", currentLocation.id)
             intent.putExtra("stationTitle", currentLocation.title)
+            intent.putExtra("latitude", currentLocation.latitude)
+            intent.putExtra("longitude", currentLocation.longitude)
             intent.putExtra("free", currentLocation.parkingCount)
             context.startActivity(intent)
         }

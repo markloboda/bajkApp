@@ -130,8 +130,8 @@ abstract class AppDatabase : RoomDatabase() {
 
                         values.put("address", "Večna pot 113, 1000 Ljubljana")
                         values.put("title", "FRI")
-                        values.put("latitude", 46.050692)
-                        values.put("longitude", 14.468974)
+                        values.put("latitude", 46.050688)
+                        values.put("longitude", 14.468956)
                         values.put("parking_count", 10)
                         db.insert("location_table", 0, values)
 

@@ -1,5 +1,7 @@
 package com.example.app
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -18,6 +20,10 @@ class BikeListActivity : AppCompatActivity() {
 
     private var stationId: Long = -1
     private lateinit var stationTitle: String
+    private lateinit var stationAddress: String
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+    private var free: Int = 0
 
     private var amountOfBikes: MutableLiveData<Int> = MutableLiveData()
 
@@ -33,6 +39,9 @@ class BikeListActivity : AppCompatActivity() {
         // Get the station id and title from the intent
         stationId = intent.getLongExtra("stationId", -1)
         stationTitle = intent.getStringExtra("stationTitle") ?: "Unknown"
+        latitude = intent.getDoubleExtra("latitude", 0.0)
+        longitude = intent.getDoubleExtra("longitude", 0.0)
+        free = intent.getIntExtra("free", 0)
 
         // set address
         stationAddress.text = intent.getStringExtra("address") ?: "Unknown"
@@ -43,9 +52,16 @@ class BikeListActivity : AppCompatActivity() {
         amountOfBikes.observe(this) {
             amountOfBikesText.text = "Amount of bikes:\n${ it }"
         }
-        freeText.text = "Number of spots:\n${intent.getIntExtra("free", -1)}"
+        freeText.text = "Number of spots:\n${free}"
 
-
+        // Setup Navigation button for Google Maps
+        val navigationButton = findViewById<TextView>(R.id.navigationButton)
+        navigationButton.setOnClickListener {
+            val gmmIntentUri = Uri.parse("google.navigation:q=${latitude},${longitude}")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            startActivity(mapIntent)
+        }
 
         // RecyclerView
         val recyclerView: RecyclerView = findViewById(R.id.bikesRecyclerView)
