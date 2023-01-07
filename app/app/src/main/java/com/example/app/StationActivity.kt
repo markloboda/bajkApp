@@ -26,7 +26,7 @@ class StationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.location_activity)
+        setContentView(R.layout.station_activity)
 
         // Get user location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)

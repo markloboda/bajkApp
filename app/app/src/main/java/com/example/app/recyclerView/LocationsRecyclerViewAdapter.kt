@@ -17,21 +17,19 @@ class LocationsRecyclerViewAdapter(private val context: Context) :
     private var stations: List<Station> = listOf()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val locationId = view.findViewById<TextView>(R.id.locationIdTextView)
         val locationTitle = view.findViewById<TextView>(R.id.locationTitleTextView)
         val locationDistance = view.findViewById<TextView>(R.id.locationDistanceTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.location_card, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.station_card, parent, false)
         return ViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Setup the data for the card
         val currentLocation = stations[position]
-        holder.locationId.text = currentLocation.id.toString()
         holder.locationTitle.text = currentLocation.title
         val meters = currentLocation.distance.toInt()
         val kilometers = meters / 1000
