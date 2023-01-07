@@ -42,12 +42,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.buttonStart).setOnClickListener {
+            if (!confirmed) {
+                Toast.makeText(this, "Please confirm your phone number", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             // start the qr code activity
             user.observe(this) { user ->
-                if (!confirmed) {
-                    Toast.makeText(this, "Please confirm your phone number", Toast.LENGTH_SHORT).show()
-                }
-
                 if (user.bikeId.toInt() == -1) {
                     val intent = Intent(this, RequestActivity::class.java)
                     intent.putExtra("requestCode", 0)
@@ -61,12 +62,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.buttonEnd).setOnClickListener {
+            if (!confirmed) {
+                Toast.makeText(this, "Please confirm your phone number", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             // start the qr code activity
             user.observe(this) { user ->
-                if (!confirmed) {
-                    Toast.makeText(this, "Please confirm your phone number", Toast.LENGTH_SHORT).show()
-                }
-
                 if (user.bikeId.toInt() != -1) {
                     val intent = Intent(this, RequestActivity::class.java)
                     intent.putExtra("requestCode", 1)
