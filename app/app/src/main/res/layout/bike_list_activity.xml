@@ -24,6 +24,7 @@
                 android:id="@+id/stationTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:text="Ime postaje"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -53,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="address"
+            android:text="Naslov"
             android:textSize="20dp" />
 
         <LinearLayout
@@ -88,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Navigation" />
+            android:text="Navigacija" />
 
     </LinearLayout>
 
@@ -98,7 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:text="Kolesa na postaji"
+        android:text="Kolesa"
         android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/swipeRefresh"
         app:layout_constraintEnd_toEndOf="parent"

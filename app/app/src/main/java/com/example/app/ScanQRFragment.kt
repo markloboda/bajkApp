@@ -88,5 +88,4 @@ class ScanQRFragment : Fragment(R.layout.scan_qrcode_fragment) {
         errorTextView.visibility = View.VISIBLE
         errorFlag = true
     }
-
 }

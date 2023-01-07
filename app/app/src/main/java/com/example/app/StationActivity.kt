@@ -31,7 +31,6 @@ class StationActivity : AppCompatActivity() {
         // Get user location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-
         // RecyclerView
         val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.locationsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
