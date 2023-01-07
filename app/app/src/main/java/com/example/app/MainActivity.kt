@@ -33,6 +33,10 @@ class MainActivity : AppCompatActivity() {
             setUser()
         }
 
+        val phone = editTextPhone.text.toString()
+        if (phone.length != 9) {
+            setUser()
+        }
 
         // Set up the buttons
         findViewById<Button>(R.id.buttonLocations).setOnClickListener {

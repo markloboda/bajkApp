@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.app.recyclerView.LocationsRecyclerViewAdapter
+import com.example.app.recyclerView.StationsRecyclerViewAdapter
 import com.example.app.viewModel.StationViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -35,7 +35,7 @@ class StationActivity : AppCompatActivity() {
         // RecyclerView
         val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.locationsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = LocationsRecyclerViewAdapter(this)
+        val adapter = StationsRecyclerViewAdapter(this)
         recyclerView.adapter = adapter
 
         // ViewModel

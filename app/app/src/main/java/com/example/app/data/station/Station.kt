@@ -8,10 +8,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "location_table")
 data class Station(
+    @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "latitude") val latitude: Double,
     @ColumnInfo(name = "longitude") val longitude: Double,
-    @ColumnInfo(name = "parking_count") val parkingCount: Int
+    @ColumnInfo(name = "parking_count") val parkingCount: Int,
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

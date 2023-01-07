@@ -11,14 +11,15 @@ import com.example.app.BikeListActivity
 import com.example.app.R
 import com.example.app.data.station.Station
 
-class LocationsRecyclerViewAdapter(private val context: Context) :
-    RecyclerView.Adapter<LocationsRecyclerViewAdapter.ViewHolder>() {
+class StationsRecyclerViewAdapter(private val context: Context) :
+    RecyclerView.Adapter<StationsRecyclerViewAdapter.ViewHolder>() {
 
     private var stations: List<Station> = listOf()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val locationTitle = view.findViewById<TextView>(R.id.locationTitleTextView)
-        val locationDistance = view.findViewById<TextView>(R.id.locationDistanceTextView)
+        val stationTitle = view.findViewById<TextView>(R.id.locationTitleTextView)
+        val stationDistance = view.findViewById<TextView>(R.id.locationDistanceTextView)
+        val stationAddress = view.findViewById<TextView>(R.id.locationAddressTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,20 +31,24 @@ class LocationsRecyclerViewAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Setup the data for the card
         val currentLocation = stations[position]
-        holder.locationTitle.text = currentLocation.title
+        holder.stationTitle.text = currentLocation.title
         val meters = currentLocation.distance.toInt()
         val kilometers = meters / 1000
-        holder.locationDistance.text = if (kilometers > 0) {
+        holder.stationDistance.text = if (kilometers > 0) {
             "${kilometers}km"
         } else {
             "${meters}m"
         }
 
+        holder.stationAddress.text = currentLocation.address
+
         // Setup click listener
         holder.itemView.setOnClickListener {
             val intent = Intent(context, BikeListActivity::class.java)
+            intent.putExtra("address", currentLocation.address)
             intent.putExtra("stationId", currentLocation.id)
             intent.putExtra("stationTitle", currentLocation.title)
+            intent.putExtra("free", currentLocation.parkingCount)
             context.startActivity(intent)
         }
     }
