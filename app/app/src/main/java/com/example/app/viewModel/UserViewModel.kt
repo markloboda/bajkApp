@@ -16,24 +16,51 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
     var userLive: MutableLiveData<User?> = MutableLiveData()
     var userIdLive: MutableLiveData<Long> = MutableLiveData()
+    var userByPhone: MutableLiveData<User?> = MutableLiveData()
+    var updateFlag: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         val userDao = AppDatabase.getDatabase(application).userDao()
         repository = UserRepository(userDao)
     }
 
-    fun getUser(ime: String, priimek: String, sektor: String) {
+    fun getUser(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = repository.getUser(ime, priimek, sektor)
-            userLive.postValue(user)
+            userLive.postValue(repository.getUser(id))
         }
     }
 
-    fun insertUser(ime: String, priimek: String, sektor: String) {
+    fun getUserByPhone(phone: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = User(ime, priimek, sektor)
+            userByPhone.postValue(repository.getUserByPhone(phone))
+        }
+    }
+
+    fun insertUser(username: String, ime: String, priimek: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val user = User(username, ime, priimek, -1)
             val userId = repository.insertUser(user)
             userIdLive.postValue(userId)
+        }
+    }
+
+    fun insertUser(user: User) {
+        this.insertUser(user.phone, user.name, user.surname)
+    }
+
+    fun updateUser(user: User) {
+        updateFlag.postValue(false)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateUser(user)
+            updateFlag.postValue(true)
+        }
+    }
+
+    fun updateUserBike(userId: Long, bikeId: Long) {
+        updateFlag.postValue(false)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateUserBike(userId, bikeId)
+            updateFlag.postValue(true)
         }
     }
 }

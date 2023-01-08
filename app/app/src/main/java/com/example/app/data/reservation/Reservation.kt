@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 data class Reservation(
     val userId: Long,
     val bikeId: Long,
-    val zacetekRezervacije: Long,
-    val konecRezervacije: Long,
-    val prevozeniKm: Int,
-    val namen: String
+    val startLocationId: Long,
+    val endLocationId: Long,
+    val startTime: Long,
+    val endTime: Long
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

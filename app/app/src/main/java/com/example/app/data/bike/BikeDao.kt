@@ -11,15 +11,18 @@ interface BikeDao {
     @Query("SELECT * FROM bike_table WHERE id=:bikeId")
     suspend fun readBikeById(bikeId: Long): Bike?
 
-    @Query("UPDATE bike_table SET status=:trueBool")
-    suspend fun resetAllBikesAvailability(trueBool: Boolean)
+    @Query("SELECT * FROM bike_table WHERE station_id = :stationId")
+    suspend fun readBikesByStationId(stationId: Long): List<Bike?>
 
-    @Query("UPDATE bike_table SET status=:falseBool WHERE id IN (:bikeIds)")
-    suspend fun setBikeAvailabilityFalse(falseBool: Boolean, bikeIds: List<Long>)
+    @Query("SELECT * FROM bike_table WHERE station_id = :stationId AND spot_index = :spotIndex")
+    suspend fun readBikeByStationIdAndSpotIndex(stationId: Long, spotIndex: Int): Bike?
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateBike(bike: Bike)
 
     @Update
     suspend fun updateBikes(vararg bikes: Bike)
+
+    @Query("UPDATE bike_table SET station_id = :stationId, spot_index = :spotIndex WHERE id = :bikeId")
+    suspend fun updateBike(bikeId: Long, stationId: Long, spotIndex: Int)
 }
